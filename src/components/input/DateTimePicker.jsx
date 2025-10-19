@@ -1,17 +1,22 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 
-const Input = ({
+const DateTimePicker = ({
   label,
-  type = "text",
-  placeholder = "",
+  name,
   value = "",
   onChange = () => {},
-  name,
   disabled = false,
-  size,
   required = false,
+  size,
+  placeholder = "-- Select Date & Time --",
+  showTime = true,
 }) => {
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+    onChange(name, newValue, e);
+  };
+
   return (
     <Form.Group className="mb-3">
       {label && (
@@ -22,17 +27,18 @@ const Input = ({
           )}
         </Form.Label>
       )}
+
       <Form.Control
-        type={type}
-        placeholder={placeholder}
-        value={value}
+        type={showTime ? "datetime-local" : "date"}
         name={name}
+        value={value || ""}
         size={size}
+        placeholder={placeholder}
+        onChange={handleChange}
         disabled={disabled}
-        onChange={(e) => onChange(e.target.value, e)}
       />
     </Form.Group>
   );
 };
 
-export default Input;
+export default DateTimePicker;
