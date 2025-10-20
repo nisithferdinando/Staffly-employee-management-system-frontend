@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Menu, X, Home, Users, Settings, BarChart3, FileText, Bell, Shield } from 'lucide-react';
 
 const Dashboard = () => {
