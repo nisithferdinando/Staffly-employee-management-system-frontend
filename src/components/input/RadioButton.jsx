@@ -17,7 +17,14 @@ const RadioButton = ({
   return (
     <Form.Group className="mb-3">
       {label && (
-        <Form.Label>
+        <Form.Label
+          style={{
+            display: "block",
+            marginBottom: "4px",
+            fontSize: "16px",
+            color: "#333",
+          }}
+        >
           {label}{" "}
           {required && (
             <span style={{ color: "red", fontWeight: "bold" }}>*</span>
@@ -37,6 +44,7 @@ const RadioButton = ({
             checked={value === opt.value}
             onChange={handleChange}
             disabled={disabled || opt.disabled}
+            style={{ fontSize: "16px" }}
           />
         ))}
       </div>

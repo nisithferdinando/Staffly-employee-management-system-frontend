@@ -2,8 +2,8 @@ import React from "react";
 import { Form } from "react-bootstrap";
 
 const Checkbox = ({
-  label,
-  name,
+  label = "",
+  name = "",
   options = [],
   values = [],
   onChange = () => {},
@@ -26,7 +26,14 @@ const Checkbox = ({
   return (
     <Form.Group className="mb-3">
       {label && (
-        <Form.Label>
+        <Form.Label
+          style={{
+            display: "block",
+            marginBottom: "4px",
+            fontSize: "16px",
+            color: "#333",
+          }}
+        >
           {label}{" "}
           {required && (
             <span style={{ color: "red", fontWeight: "bold" }}>*</span>
@@ -45,6 +52,10 @@ const Checkbox = ({
             value={opt.value}
             checked={values.includes(opt.value)}
             onChange={handleChange}
+            style={{
+              fontSize: "16px",
+              outline: "none",
+            }}
             disabled={disabled || opt.disabled}
           />
         ))}

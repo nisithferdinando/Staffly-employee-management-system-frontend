@@ -6,7 +6,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import SamplePage from "./pages/hr/samplePage";
+import SamplePage from "./pages/hr/SamplePage";
 
 const App = () => {
   return (
