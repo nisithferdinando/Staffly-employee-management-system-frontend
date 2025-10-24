@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal as ModalLayout, Button } from "react-bootstrap";
 
 const Modal = ({
   title,
@@ -16,7 +16,7 @@ const Modal = ({
   keyboard = false,
 }) => {
   return (
-    <Modal
+    <ModalLayout
       show={show}
       onHide={onClose}
       size={size}
@@ -25,12 +25,12 @@ const Modal = ({
       centered
     >
       {title && (
-        <Modal.Header closeButton>
-          <Modal.Title>{title}</Modal.Title>
-        </Modal.Header>
+        <ModalLayout.Header closeButton>
+          <ModalLayout.Title>{title}</ModalLayout.Title>
+        </ModalLayout.Header>
       )}
 
-      <Modal.Body>
+      <ModalLayout.Body>
         {content ? (
           typeof content === "string" ? (
             <p>{content}</p>
@@ -40,10 +40,10 @@ const Modal = ({
         ) : (
           children
         )}
-      </Modal.Body>
+      </ModalLayout.Body>
 
       {showFooter && (
-        <Modal.Footer>
+        <ModalLayout.Footer>
           <Button variant="secondary" onClick={onClose}>
             {closeText}
           </Button>
@@ -52,9 +52,9 @@ const Modal = ({
               {saveText}
             </Button>
           )}
-        </Modal.Footer>
+        </ModalLayout.Footer>
       )}
-    </Modal>
+    </ModalLayout>
   );
 };
 
