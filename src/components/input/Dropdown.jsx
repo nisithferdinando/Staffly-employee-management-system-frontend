@@ -1,70 +1,71 @@
 import React from "react";
-import { Form } from "react-bootstrap";
+import {
+  FormControl,
+  FormLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 
 const Dropdown = ({
   label = "",
   options = [],
-  value,
+  value = "",
   onChange = () => {},
   name = "",
   disabled = false,
-  size,
   required = false,
   placeholder = "Select",
+  className = "",
 }) => {
-  const handleFocus = (e) => {
-    e.target.style.borderColor = "#555";
-    e.target.style.boxShadow = "0 0 2px rgba(0,0,0,0.1)";
-  };
-
-  const handleBlur = (e) => {
-    e.target.style.borderColor = "#999";
-    e.target.style.boxShadow = "none";
-  };
-
   return (
-    <Form.Group className="mb-3">
+    <FormControl
+      fullWidth={false}
+      margin="dense"
+      className={className}
+      sx={{ width: "180px" }}  
+      size="small"            
+    >
       {label && (
-        <Form.Label
-          style={{
-            display: "block",
+        <FormLabel
+          sx={{
             marginBottom: "4px",
-            fontSize: "16px",
+            fontSize: "14px",
             color: "#333",
+            display: "block",
+            fontStyle: "normal", 
           }}
         >
-          {label}{" "}
+          {label}
           {required && (
-            <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+            <span style={{ color: "red", marginLeft: 3 }}>*</span>
           )}
-        </Form.Label>
+        </FormLabel>
       )}
 
-      <Form.Select
-        size={size}
+      <Select
         value={value}
         name={name}
         disabled={disabled}
         onChange={(e) => onChange(name, e.target.value)}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        style={{
-          border: "2px solid grey",
-          borderRadius: "4px",
-          padding: "5px 8px",
-          fontSize: "15px",
-          outline: "none",
-          width: "180px",
+        displayEmpty
+        inputProps={{ "aria-label": label }}
+        sx={{
+          height: "36px",     
+          fontSize: "14px",
         }}
       >
-        <option value="">{placeholder}</option>
+      
+        <MenuItem value="" sx={{ color: "#777", fontStyle: "normal" }}>
+          {placeholder}
+        </MenuItem>
+
         {options.map((opt, idx) => (
-          <option key={idx} value={opt.value}>
+          <MenuItem key={idx} value={opt.value}>
             {opt.label}
-          </option>
+          </MenuItem>
         ))}
-      </Form.Select>
-    </Form.Group>
+      </Select>
+    </FormControl>
   );
 };
 

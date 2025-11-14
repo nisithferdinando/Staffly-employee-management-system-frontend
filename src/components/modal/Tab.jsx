@@ -1,31 +1,40 @@
 import React from "react";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs as MUITabs, Tab as MUITab, Box } from "@mui/material";
 
 const Tab = ({
   tabs = [],
   activeKey,
-  onSelect,
-  variant = "tabs",
-  justify = false,
-  fill = false,
+  onSelect = () => {},
+  variant = "standard", 
+  scrollButtons = "auto",
   className = "",
 }) => {
+  const handleChange = (event, newValue) => {
+    onSelect(newValue);
+  };
+
   return (
-    <Tabs
-      id="custom-tabs"
-      activeKey={activeKey}
-      onSelect={onSelect}
-      variant={variant}
-      justify={justify}
-      fill={fill}
-      className={className}
-    >
-      {tabs.map((tab, index) => (
-        <Tab eventKey={tab.key} title={tab.title} key={index}>
-          <div className="p-3">{tab.content}</div>
-        </Tab>
+    <Box sx={{ width: "100%" }} className={className}>
+      <MUITabs
+        value={activeKey}
+        onChange={handleChange}
+        variant={variant}
+        scrollButtons={scrollButtons}
+      >
+        {tabs.map((tab) => (
+          <MUITab key={tab.key} label={tab.title} value={tab.key} />
+        ))}
+      </MUITabs>
+
+      {tabs.map((tab) => (
+        <Box
+          key={tab.key}
+          sx={{ padding: 2, display: tab.key === activeKey ? "block" : "none" }}
+        >
+          {tab.content}
+        </Box>
       ))}
-    </Tabs>
+    </Box>
   );
 };
 

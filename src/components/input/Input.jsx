@@ -1,5 +1,9 @@
 import React from "react";
-import { Form } from "react-bootstrap";
+import {
+  FormControl,
+  FormLabel,
+  OutlinedInput,
+} from "@mui/material";
 
 const Input = ({
   label = "",
@@ -9,38 +13,24 @@ const Input = ({
   onChange = () => {},
   name = "",
   disabled = false,
-  size = "md",
   required = false,
   className = "",
+  size=""
 }) => {
-  const handleFocus = (e) => {
-    e.target.style.borderColor = "#555";
-    e.target.style.boxShadow = "0 0 2px rgba(0,0,0,0.1)";
-  };
-
-  const handleBlur = (e) => {
-    e.target.style.borderColor = "#999";
-    e.target.style.boxShadow = "none";
-  };
   return (
-    <Form.Group className={`mb-3 ${className}`} controlId={name}>
+    <FormControl fullWidth={false} margin="dense" className={className}>
       {label && (
-        <Form.Label
-          style={{
-            display: "block",
-            marginBottom: "4px",
-            fontSize: "16px",
-            color: "#333",
-          }}
+        <FormLabel
+          sx={{ marginBottom: "4px", fontSize: "14px", color: "#333" }}
         >
-          {label}{" "}
+          {label}
           {required && (
-            <span style={{ color: "red", fontWeight: "bold" }}>*</span>
+            <span style={{ color: "red", marginLeft: 3 }}>*</span>
           )}
-        </Form.Label>
+        </FormLabel>
       )}
 
-      <Form.Control
+      <OutlinedInput
         type={type}
         placeholder={placeholder}
         value={value}
@@ -48,18 +38,12 @@ const Input = ({
         disabled={disabled}
         size={size}
         onChange={(e) => onChange(name, e.target.value, e)}
-        style={{
-          border: "2px solid grey",
-          borderRadius: "4px",
-          padding: "5px 8px",
-          fontSize: "15px",
-          outline: "none",
-          width: "180px",
+        sx={{
+          height: "36px",     
+          fontSize: "14px",
         }}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
       />
-    </Form.Group>
+    </FormControl>
   );
 };
 
