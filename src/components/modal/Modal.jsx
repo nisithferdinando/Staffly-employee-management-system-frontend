@@ -1,60 +1,61 @@
 import React from "react";
-import { Modal as ModalLayout, Button } from "react-bootstrap";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button as MUIButton,
+} from "@mui/material";
 
 const Modal = ({
   title,
-  show,
-  onClose,
-  onSave,
-  content,
+  show = false,
+  onClose = () => {},
+  onSave = null,
+  content = null,
   children,
-  size = "md",
+  size = "md",           
   closeText = "Cancel",
   saveText = "Save",
   showFooter = true,
-  backdrop = "static",
-  keyboard = false,
+  disableBackdropClick = true,
+  disableEscapeKeyDown = true,
 }) => {
-  return (
-    <ModalLayout
-      show={show}
-      onHide={onClose}
-      size={size}
-      backdrop={backdrop}
-      keyboard={keyboard}
-      centered
-    >
-      {title && (
-        <ModalLayout.Header closeButton>
-          <ModalLayout.Title>{title}</ModalLayout.Title>
-        </ModalLayout.Header>
-      )}
+ 
+  const maxWidthMap = {
+    sm: "sm",
+    md: "md",
+    lg: "lg",
+  };
 
-      <ModalLayout.Body>
-        {content ? (
-          typeof content === "string" ? (
-            <p>{content}</p>
-          ) : (
-            content
-          )
-        ) : (
-          children
-        )}
-      </ModalLayout.Body>
+  return (
+    <Dialog
+      open={show}
+      onClose={onClose}
+      maxWidth={maxWidthMap[size] || "md"}
+      fullWidth
+      disableEscapeKeyDown={disableEscapeKeyDown}
+      onBackdropClick={disableBackdropClick ? () => {} : onClose}
+    >
+      {title && <DialogTitle>{title}</DialogTitle>}
+
+      <DialogContent dividers>
+        {content ? (typeof content === "string" ? <p>{content}</p> : content) : children}
+      </DialogContent>
 
       {showFooter && (
-        <ModalLayout.Footer>
-          <Button variant="secondary" onClick={onClose}>
+        <DialogActions>
+          <MUIButton variant="outlined" onClick={onClose}>
             {closeText}
-          </Button>
+          </MUIButton>
           {onSave && (
-            <Button variant="primary" onClick={onSave}>
+            <MUIButton variant="contained" onClick={onSave}>
               {saveText}
-            </Button>
+            </MUIButton>
           )}
-        </ModalLayout.Footer>
+        </DialogActions>
       )}
-    </ModalLayout>
+    </Dialog>
   );
 };
 

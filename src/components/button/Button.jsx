@@ -1,31 +1,33 @@
 import React from "react";
-import { Button as BootstrapButton } from "react-bootstrap";
+import { Button as MUIButton } from "@mui/material";
 
 const Button = ({
   isEdit = false,
   label = "Submit",
   onClick = () => {},
   disabled = false,
-  size = "md",
-  variant = "primary",
+  size = "medium",        
+  variant = "contained",   
   className = "",
   icon = null,
   type = "button",
+  color = "primary",       
 }) => {
   const displayLabel = isEdit ? "Update" : label;
+
   return (
-    <BootstrapButton
+    <MUIButton
       type={type}
       size={size}
       variant={variant}
       disabled={disabled}
       onClick={onClick}
       className={className}
-      icon={icon}
+      color={color}
+      startIcon={icon || null} 
     >
-      {icon && <span className="me-2">{icon}</span>}
       {displayLabel}
-    </BootstrapButton>
+    </MUIButton>
   );
 };
 

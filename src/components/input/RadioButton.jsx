@@ -1,54 +1,52 @@
 import React from "react";
-import { Form } from "react-bootstrap";
+import {
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio as MUIRadio,
+} from "@mui/material";
 
 const RadioButton = ({
-  label,
-  name,
+  label = "",
+  name = "",
   options = [],
   value = "",
   onChange = () => {},
   required = false,
   disabled = false,
-  inline = true,
+  inline = true, 
+  size = "medium",
 }) => {
   const handleChange = (e) => {
     onChange(name, e.target.value, e);
   };
+
   return (
-    <Form.Group className="mb-3">
+    <FormControl component="fieldset" sx={{ marginBottom: 2 }}>
       {label && (
-        <Form.Label
-          style={{
-            display: "block",
-            marginBottom: "4px",
-            fontSize: "16px",
-            color: "#333",
-          }}
-        >
-          {label}{" "}
-          {required && (
-            <span style={{ color: "red", fontWeight: "bold" }}>*</span>
-          )}
-        </Form.Label>
+        <FormLabel component="legend" sx={{ fontSize: 14, color: "#333" }}>
+          {label} {required && <span style={{ color: "red" }}>*</span>}
+        </FormLabel>
       )}
 
-      <div>
+      <RadioGroup
+        row={inline}
+        name={name}
+        value={value}
+        onChange={handleChange}
+        sx={{ gap: 2 }}
+      >
         {options.map((opt, idx) => (
-          <Form.Check
+          <FormControlLabel
             key={idx}
-            inline={inline}
-            type="radio"
-            label={opt.label}
-            name={name}
             value={opt.value}
-            checked={value === opt.value}
-            onChange={handleChange}
-            disabled={disabled || opt.disabled}
-            style={{ fontSize: "16px" }}
+            control={<MUIRadio size={size} disabled={disabled || opt.disabled} />}
+            label={opt.label}
           />
         ))}
-      </div>
-    </Form.Group>
+      </RadioGroup>
+    </FormControl>
   );
 };
 

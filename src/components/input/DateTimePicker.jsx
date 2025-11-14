@@ -1,43 +1,45 @@
 import React from "react";
-import { Form } from "react-bootstrap";
+import { TextField, FormControl, FormLabel } from "@mui/material";
 
 const DateTimePicker = ({
-  label,
-  name,
+  label = "",
+  name = "",
   value = "",
   onChange = () => {},
   disabled = false,
   required = false,
-  size,
+  size = "small", 
   placeholder = "-- Select Date & Time --",
   showTime = true,
 }) => {
   const handleChange = (e) => {
-    const newValue = e.target.value;
-    onChange(name, newValue, e);
+    onChange(name, e.target.value, e);
   };
 
   return (
-    <Form.Group className="mb-3">
+    <FormControl sx={{ marginBottom: 2, width: "180px" }}>
       {label && (
-        <Form.Label>
-          {label}{" "}
-          {required && (
-            <span style={{ color: "red", fontWeight: "bold" }}>*</span>
-          )}
-        </Form.Label>
+        <FormLabel
+          component="legend"
+          sx={{ fontSize: 14, color: "#333", marginBottom: 0.5 }}
+        >
+          {label} {required && <span style={{ color: "red" }}>*</span>}
+        </FormLabel>
       )}
 
-      <Form.Control
+      <TextField
         type={showTime ? "datetime-local" : "date"}
         name={name}
         value={value || ""}
-        size={size}
-        placeholder={placeholder}
         onChange={handleChange}
         disabled={disabled}
+        size={size}
+        placeholder={placeholder}
+        InputLabelProps={{
+          shrink: false, 
+        }}
       />
-    </Form.Group>
+    </FormControl>
   );
 };
 

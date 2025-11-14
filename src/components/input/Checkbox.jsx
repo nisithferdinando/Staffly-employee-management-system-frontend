@@ -1,5 +1,11 @@
 import React from "react";
-import { Form } from "react-bootstrap";
+import {
+  FormControl,
+  FormLabel,
+  FormGroup,
+  FormControlLabel,
+  Checkbox as MUICheckbox,
+} from "@mui/material";
 
 const Checkbox = ({
   label = "",
@@ -10,6 +16,7 @@ const Checkbox = ({
   required = false,
   disabled = false,
   inline = true,
+  size = "medium", 
 }) => {
   const handleChange = (e) => {
     const { value, checked } = e.target;
@@ -23,44 +30,34 @@ const Checkbox = ({
 
     onChange(name, updatedValues, e);
   };
+
   return (
-    <Form.Group className="mb-3">
+    <FormControl component="fieldset" sx={{ marginBottom: 2 }}>
       {label && (
-        <Form.Label
-          style={{
-            display: "block",
-            marginBottom: "4px",
-            fontSize: "16px",
-            color: "#333",
-          }}
-        >
-          {label}{" "}
-          {required && (
-            <span style={{ color: "red", fontWeight: "bold" }}>*</span>
-          )}
-        </Form.Label>
+        <FormLabel component="legend" sx={{ fontSize: 14, color: "#333" }}>
+          {label} {required && <span style={{ color: "red" }}>*</span>}
+        </FormLabel>
       )}
 
-      <div>
+      <FormGroup row={inline} sx={{ gap: 2 }}> 
         {options.map((opt, idx) => (
-          <Form.Check
+          <FormControlLabel
             key={idx}
-            inline={inline}
-            type="checkbox"
+            control={
+              <MUICheckbox
+                name={name}
+                value={opt.value}
+                checked={values.includes(opt.value)}
+                onChange={handleChange}
+                disabled={disabled || opt.disabled}
+                size={size} 
+              />
+            }
             label={opt.label}
-            name={name}
-            value={opt.value}
-            checked={values.includes(opt.value)}
-            onChange={handleChange}
-            style={{
-              fontSize: "16px",
-              outline: "none",
-            }}
-            disabled={disabled || opt.disabled}
           />
         ))}
-      </div>
-    </Form.Group>
+      </FormGroup>
+    </FormControl>
   );
 };
 

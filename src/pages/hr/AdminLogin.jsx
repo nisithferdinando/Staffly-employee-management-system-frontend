@@ -48,7 +48,7 @@ const AdminLogin = () => {
         hrPassword: formData.password.trim(),
       };
       const response = await axiosInstance.post(
-        "/api/auth/hr/login",
+        "/auth/hr/login",
         requestData
       );
 
