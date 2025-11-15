@@ -104,7 +104,7 @@ const actions = [
   data={data}
   actions={actions}
   onRowDoubleClick={(row) => console.log("Row double-click", row)}
-/>;
+/>
 
 
     </div>
