@@ -8,11 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
 import HomeIcon from "@mui/icons-material/Home";
-import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
-import PeopleIcon from "@mui/icons-material/People";
-import PersonIcon from "@mui/icons-material/Person";
-import WarehouseIcon from "@mui/icons-material/Warehouse";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
+import { Box } from "@mui/material";
 
 const AppSidebar = ({ visible, onHide }) => {
   return (
@@ -31,14 +27,44 @@ const AppSidebar = ({ visible, onHide }) => {
       }}
     >
       <List>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="/hr/dashboard" onClick={onHide}>
-            <ListItemIcon>
-              <HomeIcon sx={{ color: "white" }} />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItemButton>
-        </ListItem>
+        <Box
+          component={Link}
+          to="/hr/dashboard"
+          onClick={onHide}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            padding: "8px 16px",
+            textDecoration: "none",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "gainsboro",
+            },
+            borderRadius: 1,
+          }}
+        >
+          <HomeIcon sx={{ marginRight: 1 }} />
+          <Box component="span">Home</Box>
+        </Box>
+         <Box
+          component={Link}
+          to="/hr/dashboard"
+          onClick={onHide}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            padding: "8px 16px",
+            textDecoration: "none",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "gainsboro",
+            },
+            borderRadius: 1,
+          }}
+        >
+          <HomeIcon sx={{ marginRight: 1 }} />
+          <Box component="span">Home</Box>
+        </Box>
       </List>
     </Drawer>
   );

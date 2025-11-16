@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  FormControl,
-  FormLabel,
-  OutlinedInput,
-} from "@mui/material";
+import { FormControl, FormLabel, OutlinedInput } from "@mui/material";
 
 const Input = ({
   label = "",
@@ -15,8 +11,26 @@ const Input = ({
   disabled = false,
   required = false,
   className = "",
-  size=""
+  size = "",
+  width = "100%",
 }) => {
+  switch (width) {
+    case "sm":
+      width = "150px";
+      break;
+
+    case "md":
+      width = "280px";
+      break;
+
+    case "lg":
+      width = "380px";
+      break;
+
+    default:
+      width = "100%";
+  }
+
   return (
     <FormControl fullWidth={false} margin="dense" className={className}>
       {label && (
@@ -24,9 +38,7 @@ const Input = ({
           sx={{ marginBottom: "4px", fontSize: "14px", color: "#333" }}
         >
           {label}
-          {required && (
-            <span style={{ color: "red", marginLeft: 3 }}>*</span>
-          )}
+          {required && <span style={{ color: "red", marginLeft: 3 }}>*</span>}
         </FormLabel>
       )}
 
@@ -36,10 +48,12 @@ const Input = ({
         value={value}
         name={name}
         disabled={disabled}
+        className={className}
         size={size}
-        onChange={(e) => onChange(name, e.target.value, e)}
+        onChange={onChange}
         sx={{
-          height: "36px",     
+          height: "36px",
+          width: width,
           fontSize: "14px",
         }}
       />
