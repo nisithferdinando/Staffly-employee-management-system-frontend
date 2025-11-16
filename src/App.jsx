@@ -16,20 +16,10 @@ const App = () => {
     <div>
       <Router>
         <Routes>
-          <Route
-            path="/"
-            element={
-              token ? (
-                <Route path="/" element={<DashboardLayout />}>
-                  <SamplePage />{" "}
-                </Route>
-              ) : (
-                <AdminLogin />
-              )
-            }
-          />
+          <Route path="/" element={<AdminLogin />} />
+
           <Route path="/" element={<DashboardLayout />}>
-            <Route path="/hr/dashboard" element={<SamplePage />} />
+            <Route path="hr/dashboard" element={<SamplePage />} />
           </Route>
         </Routes>
       </Router>

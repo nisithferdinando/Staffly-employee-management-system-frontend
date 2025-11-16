@@ -11,7 +11,8 @@ const Button = ({
   className = "",
   icon = null,
   type = "button",
-  color = "primary",       
+  color = "primary",
+  fullWidth= false      
 }) => {
   const displayLabel = isEdit ? "Update" : label;
 
@@ -24,7 +25,8 @@ const Button = ({
       onClick={onClick}
       className={className}
       color={color}
-      startIcon={icon || null} 
+      startIcon={icon || null}
+      fullWidth={fullWidth}
     >
       {displayLabel}
     </MUIButton>
