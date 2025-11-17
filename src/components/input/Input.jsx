@@ -15,7 +15,7 @@ const Input = ({
   width = "100%",
 }) => {
   if (width === "sm") {
-    width = "150px";
+    width = "144px";
   } else if (width === "md") {
     width = "280px";
   } else if (width === "lg") {
