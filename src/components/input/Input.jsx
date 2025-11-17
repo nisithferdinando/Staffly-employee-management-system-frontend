@@ -14,21 +14,14 @@ const Input = ({
   size = "",
   width = "100%",
 }) => {
-  switch (width) {
-    case "sm":
-      width = "150px";
-      break;
-
-    case "md":
-      width = "280px";
-      break;
-
-    case "lg":
-      width = "380px";
-      break;
-
-    default:
-      width = "100%";
+  if (width === "sm") {
+    width = "150px";
+  } else if (width === "md") {
+    width = "280px";
+  } else if (width === "lg") {
+    width === "350px";
+  } else {
+    width === "100%";
   }
 
   return (
