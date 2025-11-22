@@ -11,6 +11,9 @@ import HomeIcon from "@mui/icons-material/Home";
 import { Box } from "@mui/material";
 
 const AppSidebar = ({ visible, onHide }) => {
+
+const admin = localStorage.getItem("role");
+
   return (
     <Drawer
       variant="persistent"
@@ -27,6 +30,8 @@ const AppSidebar = ({ visible, onHide }) => {
       }}
     >
       <List>
+
+      { admin === "HR" ? <div>
         <Box
           component={Link}
           to="/hr/dashboard"
@@ -46,6 +51,7 @@ const AppSidebar = ({ visible, onHide }) => {
           <HomeIcon sx={{ marginRight: 1 }} />
           <Box component="span">Home</Box>
         </Box>
+        </div> : <div>
          <Box
           component={Link}
           to="/hr/dashboard"
@@ -63,9 +69,11 @@ const AppSidebar = ({ visible, onHide }) => {
           }}
         >
           <HomeIcon sx={{ marginRight: 1 }} />
-          <Box component="span">Home</Box>
+          <Box component="span">Employee</Box>
         </Box>
+        </div>}
       </List>
+      
     </Drawer>
   );
 };

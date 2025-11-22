@@ -42,6 +42,7 @@ const AdminLogin = () => {
 
       localStorage.setItem("AdminToken", response.data.token);
       localStorage.setItem("AdminEmail", response.data.hrDetails.hrEmail);
+      localStorage.setItem("role", response.data.role);
       setValidationErrors("");
       navigate("/hr/dashboard");
     } catch (error) {
