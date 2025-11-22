@@ -9,9 +9,7 @@ const useEmployee = () => {
   const id = localStorage.getItem("userId");
 
   useEffect(() => {
-    if (id) {
-      dispatch(getEmployee(id));
-    }
+    dispatch(getEmployee(id));
   }, [dispatch]);
 
   return employee;
