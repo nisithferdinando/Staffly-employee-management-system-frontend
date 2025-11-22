@@ -116,7 +116,7 @@ const AdminLogin = () => {
               <span>Remember me</span>
             </label>
           </div>
-
+            <div className="flex space-x-4">
           <Button
             type="submit"
             label={loading ? "Logging in..." : "Login"}
@@ -128,6 +128,7 @@ const AdminLogin = () => {
             disabled={loading}
             onClick={() => navigate("/employee/login")}
           />
+          </div>
         </form>
       </div>
     </div>
