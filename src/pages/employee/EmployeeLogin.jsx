@@ -1,11 +1,11 @@
-// AdminLogin.jsx
+// EmployeeLogin.jsx
 import React, { useState } from "react";
-import axiosInstance from "../../util/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
+import axiosInstance from "../../util/axiosInstance";
 
-const AdminLogin = () => {
+const EmployeeLogin = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [validationErrors, setValidationErrors] = useState("");
@@ -35,14 +35,13 @@ const AdminLogin = () => {
 
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/auth/hr/login", {
-        hrEmail: formData.email.trim(),
-        hrPassword: formData.password.trim(),
+      const response = await axiosInstance.post("/auth/employee/login", {
+        employeeEmail: formData.email.trim(),
+        employeePassword: formData.password.trim(),
       });
 
       localStorage.setItem("AdminToken", response.data.token);
-      localStorage.setItem("AdminEmail", response.data.hrDetails.hrEmail);
-      localStorage.setItem("role", response.data.role);
+      localStorage.setItem("EmployeeEmail", response.data.employeeLoginDetails.email);
       setValidationErrors("");
       navigate("/hr/dashboard");
     } catch (error) {
@@ -59,7 +58,7 @@ const AdminLogin = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100">
       <div className="w-full max-w-md bg-white rounded-3xl p-8">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Admin Login
+          Employee Login
         </h2>
 
         {validationErrors && (
@@ -124,9 +123,9 @@ const AdminLogin = () => {
           />
           <Button
             type="button"
-            label="Login as Employee"
+            label="Login as Admin"
             disabled={loading}
-            onClick={() => navigate("/employee/login")}
+            onClick={() => navigate("/")}
           />
         </form>
       </div>
@@ -134,4 +133,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default EmployeeLogin;
