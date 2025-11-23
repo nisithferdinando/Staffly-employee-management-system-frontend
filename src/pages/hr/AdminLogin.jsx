@@ -42,6 +42,7 @@ const AdminLogin = () => {
 
       localStorage.setItem("AdminToken", response.data.token);
       localStorage.setItem("AdminEmail", response.data.hrDetails.hrEmail);
+      localStorage.setItem("role", response.data.role);
       setValidationErrors("");
       navigate("/hr/dashboard");
     } catch (error) {
@@ -115,7 +116,7 @@ const AdminLogin = () => {
               <span>Remember me</span>
             </label>
           </div>
-
+            <div className="flex space-x-4">
           <Button
             type="submit"
             label={loading ? "Logging in..." : "Login"}
@@ -127,6 +128,7 @@ const AdminLogin = () => {
             disabled={loading}
             onClick={() => navigate("/employee/login")}
           />
+          </div>
         </form>
       </div>
     </div>

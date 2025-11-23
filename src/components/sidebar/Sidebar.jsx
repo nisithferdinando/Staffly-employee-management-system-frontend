@@ -11,6 +11,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import { Box } from "@mui/material";
 
 const AppSidebar = ({ visible, onHide }) => {
+  const admin = localStorage.getItem("role");
+
   return (
     <Drawer
       variant="persistent"
@@ -27,44 +29,52 @@ const AppSidebar = ({ visible, onHide }) => {
       }}
     >
       <List>
-        <Box
-          component={Link}
-          to="/hr/dashboard"
-          onClick={onHide}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            padding: "8px 16px",
-            textDecoration: "none",
-            color: "white",
-            "&:hover": {
-              backgroundColor: "gainsboro",
-            },
-            borderRadius: 1,
-          }}
-        >
-          <HomeIcon sx={{ marginRight: 1 }} />
-          <Box component="span">Home</Box>
-        </Box>
-         <Box
-          component={Link}
-          to="/hr/dashboard"
-          onClick={onHide}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            padding: "8px 16px",
-            textDecoration: "none",
-            color: "white",
-            "&:hover": {
-              backgroundColor: "gainsboro",
-            },
-            borderRadius: 1,
-          }}
-        >
-          <HomeIcon sx={{ marginRight: 1 }} />
-          <Box component="span">Home</Box>
-        </Box>
+        {admin === "HR" ? (
+          <div>
+            <Box
+              component={Link}
+              to="/hr/dashboard"
+              onClick={onHide}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                padding: "8px 16px",
+                textDecoration: "none",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "gainsboro",
+                },
+                borderRadius: 1,
+              }}
+            >
+              <HomeIcon sx={{ marginRight: 1 }} />
+              <Box component="span">Home</Box>
+            </Box>
+          </div>
+        ) : (
+          <div>
+            <Box
+              component={Link}
+              to="/employee/dashboard"
+              onClick={onHide}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                padding: "8px 16px",
+                textDecoration: "none",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "gainsboro",
+                },
+                borderRadius: 1,
+              }}
+            >
+              <HomeIcon sx={{ marginRight: 1 }} />
+              <Box component="span">Employee</Box>
+            </Box>
+            
+          </div>
+        )}
       </List>
     </Drawer>
   );

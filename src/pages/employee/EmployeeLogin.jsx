@@ -10,7 +10,7 @@ const EmployeeLogin = () => {
   const [errors, setErrors] = useState({});
   const [validationErrors, setValidationErrors] = useState("");
   const [loading, setLoading] = useState(false);
-  const [formToogle, setFormTogle]= useState(false);
+  const [formToogle, setFormTogle] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -41,9 +41,14 @@ const EmployeeLogin = () => {
       });
 
       localStorage.setItem("AdminToken", response.data.token);
-      localStorage.setItem("EmployeeEmail", response.data.employeeLoginDetails.email);
+      localStorage.setItem(
+        "EmployeeEmail",
+        response.data.employeeLoginDetails.email
+      );
+      localStorage.setItem("userId", response.data.employeeLoginDetails.id);
+      localStorage.setItem("role", response.data.role);
       setValidationErrors("");
-      navigate("/hr/dashboard");
+      navigate("/employee/dashboard");
     } catch (error) {
       setValidationErrors(
         error.response?.data?.message ||
