@@ -7,8 +7,9 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import SamplePage from "./pages/hr/SamplePage";
 import DashboardLayout from "./components/sidebar/DashboardLayout";
+import AdminDashboard from "./pages/hr/AdminDashboard";
+import EmployeeDashboard from "./pages/employee/employeeDashboard";
 
 const App = () => {
   const token = localStorage.getItem("AdminToken");
@@ -21,7 +22,8 @@ const App = () => {
           <Route path="/employee/login" element={<EmployeeLogin />} />
 
           <Route path="/" element={<DashboardLayout />}>
-            <Route path="hr/dashboard" element={<SamplePage />} />
+            <Route path="hr/dashboard" element={<AdminDashboard />} />
+            <Route path="employee/dashboard" element={<EmployeeDashboard/>}/>
           </Route>
         </Routes>
       </Router>

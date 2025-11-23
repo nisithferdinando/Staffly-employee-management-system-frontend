@@ -46,8 +46,9 @@ const EmployeeLogin = () => {
         response.data.employeeLoginDetails.email
       );
       localStorage.setItem("userId", response.data.employeeLoginDetails.id);
+      localStorage.setItem("role", response.data.role);
       setValidationErrors("");
-      navigate("/hr/dashboard");
+      navigate("/employee/dashboard");
     } catch (error) {
       setValidationErrors(
         error.response?.data?.message ||
