@@ -4,6 +4,7 @@ import {
   FormLabel,
   Select,
   MenuItem,
+  FormHelperText,
 } from "@mui/material";
 
 const Dropdown = ({
@@ -16,14 +17,23 @@ const Dropdown = ({
   required = false,
   placeholder = "Select",
   className = "",
+  errorMessage = {},
 }) => {
+  const finalError = errorMessage?.[name] || "";
+  const isError = Boolean(finalError);
+
+  const mappedOptions = options.map((opt) => ({
+    value: opt.value ?? opt.id ?? opt.key,
+    label: opt.valueName ?? opt.name ?? opt.label ?? opt.value,
+  }));
   return (
     <FormControl
       fullWidth={false}
       margin="dense"
       className={className}
-      sx={{ width: "180px" }}  
-      size="small"            
+      sx={{ width: "200px" }}
+      size="small"
+      error={isError}
     >
       {label && (
         <FormLabel
@@ -32,13 +42,11 @@ const Dropdown = ({
             fontSize: "14px",
             color: "#333",
             display: "block",
-            fontStyle: "normal", 
+            fontStyle: "normal",
           }}
         >
           {label}
-          {required && (
-            <span style={{ color: "red", marginLeft: 3 }}>*</span>
-          )}
+          {required && <span style={{ color: "red", marginLeft: 3 }}>*</span>}
         </FormLabel>
       )}
 
@@ -50,21 +58,21 @@ const Dropdown = ({
         displayEmpty
         inputProps={{ "aria-label": label }}
         sx={{
-          height: "36px",     
+          height: "37px",
           fontSize: "14px",
         }}
       >
-      
         <MenuItem value="" sx={{ color: "#777", fontStyle: "normal" }}>
           {placeholder}
         </MenuItem>
 
-        {options.map((opt, idx) => (
+        {mappedOptions.map((opt, idx) => (
           <MenuItem key={idx} value={opt.value}>
             {opt.label}
           </MenuItem>
         ))}
       </Select>
+      {isError && <FormHelperText>{finalError}</FormHelperText>}
     </FormControl>
   );
 };

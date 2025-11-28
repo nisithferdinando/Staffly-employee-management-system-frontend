@@ -15,12 +15,16 @@ const RadioButton = ({
   onChange = () => {},
   required = false,
   disabled = false,
-  inline = true, 
+  inline = true,
   size = "medium",
+  errorMessage = {},
 }) => {
   const handleChange = (e) => {
     onChange(name, e.target.value, e);
   };
+
+  const finalError = errorMessage?.[name] || "";
+  const isError = Boolean(finalError);
 
   return (
     <FormControl component="fieldset" sx={{ marginBottom: 2 }}>
@@ -41,11 +45,14 @@ const RadioButton = ({
           <FormControlLabel
             key={idx}
             value={opt.value}
-            control={<MUIRadio size={size} disabled={disabled || opt.disabled} />}
+            control={
+              <MUIRadio size={size} disabled={disabled || opt.disabled} />
+            }
             label={opt.label}
           />
         ))}
       </RadioGroup>
+      {isError && <FormHelperText>{finalError}</FormHelperText>}
     </FormControl>
   );
 };
