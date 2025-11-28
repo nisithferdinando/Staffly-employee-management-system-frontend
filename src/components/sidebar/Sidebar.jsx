@@ -2,10 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import HomeIcon from "@mui/icons-material/Home";
 import { Box } from "@mui/material";
@@ -70,9 +67,29 @@ const AppSidebar = ({ visible, onHide }) => {
               }}
             >
               <HomeIcon sx={{ marginRight: 1 }} />
-              <Box component="span">Employee</Box>
+              <Box component="span">Home</Box>
             </Box>
-            
+             <Box
+              component={Link}
+              to="/employee/leave"
+              onClick={onHide}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                padding: "8px 16px",
+                textDecoration: "none",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "gainsboro",
+                },
+                borderRadius: 1,
+              }}
+            >
+              <ExitToAppIcon sx={{ marginRight: 1 }} />
+              <Box component="span">Leave</Box>
+            </Box>
+
+
           </div>
         )}
       </List>

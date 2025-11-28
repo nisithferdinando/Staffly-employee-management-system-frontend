@@ -13,6 +13,7 @@ const Input = ({
   className = "",
   size = "",
   width = "100%",
+  errorMessage = {},
 }) => {
   if (width === "sm") {
     width = "144px";
@@ -23,9 +24,16 @@ const Input = ({
   } else {
     width === "100%";
   }
+  const finalError = errorMessage?.[name] || "";
+  const isError = !!finalError;
 
   return (
-    <FormControl fullWidth={false} margin="dense" className={className}>
+    <FormControl
+      error={isError}
+      fullWidth={false}
+      margin="dense"
+      className={className}
+    >
       {label && (
         <FormLabel
           sx={{ marginBottom: "4px", fontSize: "14px", color: "#333" }}
@@ -43,13 +51,15 @@ const Input = ({
         disabled={disabled}
         className={className}
         size={size}
+        error={isError}
         onChange={onChange}
         sx={{
-          height: "36px",
+          height: "37px",
           width: width,
           fontSize: "14px",
         }}
       />
+      {isError && <FormHelperText>{finalError}</FormHelperText>}
     </FormControl>
   );
 };

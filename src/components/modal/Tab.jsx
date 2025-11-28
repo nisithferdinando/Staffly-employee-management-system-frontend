@@ -20,6 +20,7 @@ const Tab = ({
         onChange={handleChange}
         variant={variant}
         scrollButtons={scrollButtons}
+        
       >
         {tabs.map((tab) => (
           <MUITab key={tab.key} label={tab.title} value={tab.key} />

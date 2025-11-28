@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, FormControl, FormLabel } from "@mui/material";
+import { TextField, FormControl, FormLabel, FormHelperText } from "@mui/material";
 
 const DateTimePicker = ({
   label = "",
@@ -8,20 +8,24 @@ const DateTimePicker = ({
   onChange = () => {},
   disabled = false,
   required = false,
-  size = "small", 
+  size = "small",
   placeholder = "-- Select Date & Time --",
   showTime = true,
+  errorMessage = {},
 }) => {
+  const finalError = errorMessage?.[name] || "";
+  const isError = Boolean(finalError);
+
   const handleChange = (e) => {
     onChange(name, e.target.value, e);
   };
 
   return (
-    <FormControl sx={{ marginBottom: 2, width: "180px" }}>
+    <FormControl margin="dense" sx={{ width: "180px" }}>
       {label && (
         <FormLabel
           component="legend"
-          sx={{ fontSize: 14, color: "#333", marginBottom: 0.5 }}
+          sx={{ fontSize: 14, color: "#333", marginBottom: "4px" }}
         >
           {label} {required && <span style={{ color: "red" }}>*</span>}
         </FormLabel>
@@ -35,10 +39,12 @@ const DateTimePicker = ({
         disabled={disabled}
         size={size}
         placeholder={placeholder}
+        error={isError}
         InputLabelProps={{
-          shrink: false, 
+          shrink: false,
         }}
       />
+      {isError && <FormHelperText>{finalError}</FormHelperText>}
     </FormControl>
   );
 };
