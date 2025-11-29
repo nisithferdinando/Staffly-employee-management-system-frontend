@@ -40,6 +40,8 @@ const EmployeeLogin = () => {
         employeePassword: formData.password.trim(),
       });
 
+      await Promise((setTimeout) => 700);
+
       localStorage.setItem("AdminToken", response.data.token);
       localStorage.setItem(
         "EmployeeEmail",
@@ -60,7 +62,6 @@ const EmployeeLogin = () => {
   };
 
   return (
-    
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100">
       <div className="w-full max-w-md bg-white rounded-3xl p-8">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
@@ -122,19 +123,17 @@ const EmployeeLogin = () => {
             </label>
           </div>
 
-          <div className="flex space-x-4">
-            <Button
-              type="submit"
-              label={loading ? "Logging in..." : "Login"}
-              disabled={loading}
-            />
-            <Button
-              type="button"
-              label="Login as Admin"
-              disabled={loading}
-              onClick={() => navigate("/")}
-            />
-          </div>
+          <Button
+            type="submit"
+            label={loading ? "Logging in..." : "Login"}
+            disabled={loading}
+          />
+          <Button
+            type="button"
+            label="Login as Admin"
+            disabled={loading}
+            onClick={() => navigate("/")}
+          />
         </form>
       </div>
     </div>
