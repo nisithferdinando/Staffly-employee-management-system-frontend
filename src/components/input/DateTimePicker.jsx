@@ -15,7 +15,7 @@ const DateTimePicker = ({
   required = false,
   size = "small",
   placeholder = "",
-  showTime = false, // true = time, false = date
+  showTime = false, 
   errorMessage = {},
 }) => {
  
@@ -26,7 +26,6 @@ const DateTimePicker = ({
     onChange(name, e.target.value, e);
   };
 
-  // Only date OR time
   const inputType = showTime ? "time" : "date";
 
   return (
