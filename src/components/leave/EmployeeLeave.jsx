@@ -95,6 +95,7 @@ const EmployeeLeave = () => {
                 value={form.leaveDate}
                 onChange={handleChange}
                 errorMessage={errors}
+                
               />
             </div>
             <div className="mt-4">

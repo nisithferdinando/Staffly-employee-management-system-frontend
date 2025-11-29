@@ -61,6 +61,7 @@ const Dropdown = ({
           height: "37px",
           fontSize: "14px",
         }}
+         error={isError}
       >
         <MenuItem value="" sx={{ color: "#777", fontStyle: "normal" }}>
           {placeholder}
