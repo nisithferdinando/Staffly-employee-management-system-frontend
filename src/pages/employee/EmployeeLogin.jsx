@@ -40,8 +40,6 @@ const EmployeeLogin = () => {
         employeePassword: formData.password.trim(),
       });
 
-      await Promise((setTimeout) => 700);
-
       localStorage.setItem("AdminToken", response.data.token);
       localStorage.setItem(
         "EmployeeEmail",

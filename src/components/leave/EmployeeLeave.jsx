@@ -88,7 +88,7 @@ const EmployeeLeave = () => {
           <div className="flex justify-between mt-8 m-8">
             <div>
               <div className="flex flex-col">
-                <h1 className="pt-12 text-blue-950 text-[24px]">
+                <h1 className="pt-12 text-blue-950 text-[20px]">
                   Employee Leave Application
                 </h1>
 
@@ -119,7 +119,7 @@ const EmployeeLeave = () => {
               </div>
             </div>
             <div className="mr-12">
-              <h1 className="pt-12 text-blue-950 text-[24px] text-center">
+              <h1 className="pt-12 text-blue-950 text-[20px] text-center">
                 Leave Balance
               </h1>
               <Table
