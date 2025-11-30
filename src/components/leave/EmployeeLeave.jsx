@@ -10,6 +10,8 @@ import { validateEmployeeLeave } from "../../validations/employeeLeaveValidation
 import { validateForm } from "../../util/formValidators";
 import useEmployee from "../../hook/useEmployee";
 import Loader from "../../loader/Loader";
+import Toast from "../Toast/Toast";
+import { toast } from "react-toastify";
 
 const EmployeeLeave = () => {
   const [leaveType, setLeaveType] = useState([]);
@@ -45,7 +47,7 @@ const EmployeeLeave = () => {
     setErrors(result);
 
     if (Object.keys(result).length === 0) {
-      setLoading(true); 
+      setLoading(true);
 
       try {
         const leaveRequest = {
@@ -61,26 +63,29 @@ const EmployeeLeave = () => {
         console.log("Submit Payload", leaveRequest);
 
         const response = await axiosInstance.post("/leave/add", leaveRequest);
+        if (!response.data.success) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          toast.warning(response.data.message);
+          return;
+        }
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
-
+        toast.success("Leave added successfully!");
         setForm({ leaveType: "", leaveDate: "" });
       } catch (error) {
-        console.log("submit error", error);
+        if (error.response && error.response.data) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          toast.error(error.response.data.message);
+        }
       } finally {
         setLoading(false);
       }
     }
   };
 
-  const columns = [];
-
-  const data = [
-    { name: "John", category: "Cardiology", active: "Yes" },
-    { name: "Nimal", category: "ENT", active: "No" },
-  ];
   return (
     <div>
+      <Toast position="top-right" autoClose={3000} theme="colored" />
       {loading ? (
         <Loader />
       ) : (
