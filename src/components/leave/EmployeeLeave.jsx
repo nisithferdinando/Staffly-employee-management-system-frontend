@@ -21,6 +21,8 @@ const EmployeeLeave = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [minDate, setMinDate] = useState("");
+  const [maxDate, setMaxDate] = useState("");
 
   const employee = useEmployee();
 
@@ -36,9 +38,41 @@ const EmployeeLeave = () => {
       ...form,
       [name]: value,
     });
+    if (name === "leaveType") {
+      handleLeaveType(value);
+      setForm((prev) => ({ ...prev, leaveDate: "" }));
+    }
 
     if (errors[name]) {
       setErrors({ ...errors, [name]: null });
+    }
+  };
+
+  const formatDate = (d) => d.toISOString().split("T")[0];
+
+  const handleLeaveType = (type) => {
+    const today = new Date();
+
+    if (type === 1) {
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+
+      const dayAfter = new Date();
+      dayAfter.setDate(today.getDate() + 2);
+
+      //setMinDate(formatDate(tomorrow));
+      //setMaxDate(formatDate(dayAfter));
+    } else if (type === 2) {
+      const monthAfter = new Date();
+      monthAfter.setDate(today.getDate() + 30);
+      setMinDate(formatDate(monthAfter));
+      setMaxDate("");
+    } else if (type === 3) {
+      setMinDate(formatDate(today));
+      setMaxDate(formatDate(today));
+    } else {
+      setMinDate("");
+      setMaxDate("");
     }
   };
 
@@ -116,6 +150,8 @@ const EmployeeLeave = () => {
                     value={form.leaveDate}
                     onChange={handleChange}
                     errorMessage={errors}
+                    min={minDate}
+                    max={maxDate}
                   />
                 </div>
                 <div className="mt-4">
