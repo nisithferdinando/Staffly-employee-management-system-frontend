@@ -45,7 +45,7 @@ const EmployeeLogin = () => {
         "EmployeeEmail",
         response.data.employeeLoginDetails.email
       );
-      localStorage.setItem("userId", response.data.employeeLoginDetails.id);
+      localStorage.setItem("userId", response.data.employeeLoginDetails.employee);
       localStorage.setItem("role", response.data.role);
       setValidationErrors("");
       navigate("/employee/dashboard");
