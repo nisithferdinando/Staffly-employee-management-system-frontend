@@ -145,7 +145,7 @@ const EmployeeLeave = () => {
                   <DateTimePicker
                     label="Date"
                     required={true}
-                    showTime={false}
+                    showTime={true}
                     name="leaveDate"
                     value={form.leaveDate}
                     onChange={handleChange}
