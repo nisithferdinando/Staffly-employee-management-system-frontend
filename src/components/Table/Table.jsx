@@ -64,7 +64,7 @@ const Table = ({
         width: "100%",
         overflow: "hidden",
         borderRadius: 2,
-        boxShadow: 2,
+        boxShadow: 1,
       }}
     >
       <TableContainer

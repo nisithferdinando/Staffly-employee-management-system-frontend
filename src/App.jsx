@@ -11,6 +11,7 @@ import DashboardLayout from "./components/sidebar/DashboardLayout";
 import AdminDashboard from "./pages/hr/AdminDashboard";
 import EmployeeDashboard from "./pages/employee/employeeDashboard";
 import EmployeeLeavePage from "./pages/employee/EmployeeLeavePage";
+import EmployeeAttendancePage from "./pages/employee/EmployeeAttendancePage";
 
 const App = () => {
   const token = localStorage.getItem("AdminToken");
@@ -26,6 +27,7 @@ const App = () => {
             <Route path="hr/dashboard" element={<AdminDashboard />} />
             <Route path="employee/dashboard" element={<EmployeeDashboard />} />
             <Route path="employee/leave" element={<EmployeeLeavePage />} />
+            <Route path="employee/attendance" element={<EmployeeAttendancePage />} />
           </Route>
         </Routes>
       </Router>
