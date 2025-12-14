@@ -9,10 +9,10 @@ const useEmployee = () => {
   const id = localStorage.getItem("userId");
 
   useEffect(() => {
-    if(id){
+    if(id && ! employee){
     dispatch(getEmployee(id));
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, employee]);
 
   return employee;
 };
