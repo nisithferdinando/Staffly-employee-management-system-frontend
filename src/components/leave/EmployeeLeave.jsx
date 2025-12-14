@@ -12,6 +12,7 @@ import useEmployee from "../../hook/useEmployee";
 import Loader from "../../loader/Loader";
 import Toast from "../Toast/Toast";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const EmployeeLeave = () => {
   const [leaveType, setLeaveType] = useState([]);
@@ -23,6 +24,7 @@ const EmployeeLeave = () => {
   const [loading, setLoading] = useState(false);
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
+  const [leaveSummary, setLeaveSummary] = useState([]);
 
   const employee = useEmployee();
 
@@ -60,8 +62,8 @@ const EmployeeLeave = () => {
       const dayAfter = new Date();
       dayAfter.setDate(today.getDate() + 2);
 
-      //setMinDate(formatDate(tomorrow));
-      //setMaxDate(formatDate(dayAfter));
+      setMinDate(formatDate(tomorrow));
+      setMaxDate(formatDate(dayAfter));
     } else if (type === 2) {
       const monthAfter = new Date();
       monthAfter.setDate(today.getDate() + 30);
@@ -117,6 +119,18 @@ const EmployeeLeave = () => {
     }
   };
 
+  const employeeId = employee?.id;
+
+  useEffect(() => {
+    if (!employee?.id) return;
+    (async () => {
+      const response = await axiosInstance.get(`/leave/summary/${employeeId}`);
+      setLeaveSummary(response.data);
+    })();
+  }, [employee]);
+
+  console.log("leave summary", leaveSummary);
+
   return (
     <div>
       <Toast position="top-right" autoClose={3000} theme="colored" />
@@ -125,9 +139,9 @@ const EmployeeLeave = () => {
       ) : (
         <div>
           <div className="flex justify-between mt-8 m-8">
-            <div>
+            <div className="bg-gray-100 p-12 mt-10 rounded-lg shadow-sm">
               <div className="flex flex-col">
-                <h1 className="pt-12 text-blue-950 text-[20px]">
+                <h1 className="mt-8 text-blue-950 text-[20px]">
                   Employee Leave Application
                 </h1>
 
@@ -159,21 +173,48 @@ const EmployeeLeave = () => {
                 </div>
               </div>
             </div>
-            <div className="mr-12">
-              <h1 className="pt-12 text-blue-950 text-[20px] text-center">
+            <div className="mr-8 mt-10 bg-gray-100/85 p-12 rounded-lg shadow-sm">
+              <h1 className="mt-8 mb-8 text-blue-950 text-[20px] text-center">
                 Leave Balance
               </h1>
-              <Table
-                columns={[
-                  { label: "Leave Type", key: "name" },
-                  { label: "Total Leave", key: "name" },
-                  { label: "Used Leave", key: "category" },
-                  { label: "Available Leave", key: "active" },
-                ]}
-                //data={}
-                sizeVariant="sm"
-                paddingVariant="lg"
-              />
+              <div className="px-4">
+                <table className="divide-y-2">
+                  <thead className="bg-slate-200">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-lg font-semibold text-gray-700">
+                        Leave Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-lg font-semibold text-gray-700">
+                        Allowed Leave
+                      </th>
+                      <th className="px-4 py-2 text-left text-lg font-semibold text-gray-700">
+                        Used Leaved
+                      </th>
+                      <th className="px-4 py-2 text-left text-lg font-semibold text-gray-700">
+                        Remaining Leave
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="">
+                    {leaveSummary.map((leave) => (
+                      <tr key={leave.id} className="">
+                        <td className="px-4 py-3 text-slate-950 text-lg">
+                          {leave.leaveTypeName}
+                        </td>
+                        <td className="px-4 py-2 text-slate-500">
+                          {leave.allowedLeave}
+                        </td>
+                        <td className="px-4 py-2 text-blue-500">
+                          {leave.usedLeave}
+                        </td>
+                        <td className="px-4 py-2 text-slate-700">
+                          {leave.remainingLeave}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
