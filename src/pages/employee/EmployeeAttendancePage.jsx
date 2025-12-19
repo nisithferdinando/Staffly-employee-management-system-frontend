@@ -1,5 +1,6 @@
-import React from 'react'
+import React, {useState} from 'react'
 import EmployeeAttendance from '../../components/attendance/EmployeeAttendance';
+import Tab from '../../components/modal/Tab';
 
 const EmployeeAttendancePage = () => {
     const [activeKey, setActiveKey] = useState("attendance");
