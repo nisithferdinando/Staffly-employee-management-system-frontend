@@ -15,7 +15,7 @@ const DateTimePicker = ({
   required = false,
   size = "small",
   placeholder = "",
-  showTime = false, 
+  showTime = false,
   errorMessage = {},
   min = "",
   max = "",
@@ -50,7 +50,7 @@ const DateTimePicker = ({
       <TextField
         type={inputType}
         name={name}
-        value={formatDate(value)}
+        value={showTime ? value : formatDate(value)}
         onChange={handleChange}
         disabled={disabled}
         size={size}
