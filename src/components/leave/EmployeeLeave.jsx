@@ -13,12 +13,16 @@ import Loader from "../../loader/Loader";
 import Toast from "../Toast/Toast";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import SearchDropdown from "../input/SearchDropdown";
+import { getSearchDropdown } from "../searchDropdown/searchDropdown";
 
 const EmployeeLeave = () => {
   const [leaveType, setLeaveType] = useState([]);
   const [form, setForm] = useState({
     leaveType: "",
     leaveDate: "",
+    approver: null,
+    approverId: null, 
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -43,6 +47,14 @@ const EmployeeLeave = () => {
     if (name === "leaveType") {
       handleLeaveType(value);
       setForm((prev) => ({ ...prev, leaveDate: "" }));
+    }
+    if (name === "approver") {
+      setForm((prev) => ({
+        ...prev,
+        approver: value,
+        approverId: value?.id ?? null,
+      }));
+      return;
     }
 
     if (errors[name]) {
@@ -93,12 +105,13 @@ const EmployeeLeave = () => {
           firstName: employee.firstName,
           lastName: employee.lastName,
           createdBy: employee.fullName,
+          approverId: form.approverId,
           updatedBy: "",
         };
 
         console.log("Submit Payload", leaveRequest);
 
-        const response = await axiosInstance.post("/leave/add", leaveRequest);
+        //const response = await axiosInstance.post("/leave/add", leaveRequest);
         if (!response.data.success) {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           toast.warning(response.data.message);
@@ -166,6 +179,21 @@ const EmployeeLeave = () => {
                     errorMessage={errors}
                     min={minDate}
                     max={maxDate}
+                  />
+
+                  <SearchDropdown
+                    label="Approver"
+                    name="approver"
+                    placeholder="Search employee"
+                    value={form.approver}
+                    api={getSearchDropdown}
+                    apiDependency={{
+                      type: "employee",
+                      param1: employee?.department,
+                    }}
+                    onChange={handleChange}
+                    errorMessage={errors}
+                    required={true}
                   />
                 </div>
                 <div className="mt-4">

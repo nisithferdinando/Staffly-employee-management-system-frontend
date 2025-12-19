@@ -12,8 +12,8 @@ const SearchDropdown = ({
   name = "",
   value = null,
   onChange = () => {},
-  api, 
-  apiDependency = {}, 
+  api,
+  apiDependency = {},
   disabled = false,
   required = false,
   placeholder = "",
@@ -40,10 +40,10 @@ const SearchDropdown = ({
 
         const res = await api({
           searchText,
-          ...apiDependency, 
+          ...apiDependency,
         });
 
-        setOptions(res.data || []);
+        setOptions(res || []);
       } catch (err) {
         console.error("SearchDropdown error", err);
         setOptions([]);
@@ -78,9 +78,7 @@ const SearchDropdown = ({
         disabled={disabled}
         onChange={(e, newValue) => onChange(name, newValue)}
         onInputChange={(e, newValue) => setSearchText(newValue)}
-        getOptionLabel={(opt) =>
-          opt?.label ?? opt?.name ?? opt?.valueName ?? ""
-        }
+        getOptionLabel={(opt) => opt?.text1 ?? ""}
         isOptionEqualToValue={(opt, val) => opt?.id === val?.id}
         renderInput={(params) => (
           <TextField
