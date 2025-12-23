@@ -21,8 +21,9 @@ const EmployeeLeave = () => {
   const [form, setForm] = useState({
     leaveType: "",
     leaveDate: "",
-    approver: null,
-    approverId: null, 
+    coveringPersonName: null,
+    coveringPerson: null,
+    remarks: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -99,13 +100,15 @@ const EmployeeLeave = () => {
 
       try {
         const leaveRequest = {
-          ...form,
           employee: employee.id,
           employeeNo: employee.employeeNo,
           firstName: employee.firstName,
           lastName: employee.lastName,
+          leaveType: form.leaveType,
+          leaveDate: form.leaveDate,
           createdBy: employee.fullName,
-          approverId: form.approverId,
+          coveringPerson: form.coveringPerson,
+          remarks: form.remarks,
           updatedBy: "",
         };
 
@@ -180,7 +183,7 @@ const EmployeeLeave = () => {
                     min={minDate}
                     max={maxDate}
                   />
-
+                 
                   <SearchDropdown
                     label="Approver"
                     name="approver"
@@ -226,16 +229,16 @@ const EmployeeLeave = () => {
                   <tbody className="">
                     {leaveSummary.map((leave) => (
                       <tr key={leave.id} className="">
-                        <td className="px-4 py-3 text-slate-950 text-lg">
+                        <td className="px-4 py-3 text-slate-950 text-lg ">
                           {leave.leaveTypeName}
                         </td>
-                        <td className="px-4 py-2 text-slate-500">
+                        <td className="px-4 py-2 text-slate-500 text-center">
                           {leave.allowedLeave}
                         </td>
-                        <td className="px-4 py-2 text-blue-500">
+                        <td className="px-4 py-2 text-blue-500 text-center">
                           {leave.usedLeave}
                         </td>
-                        <td className="px-4 py-2 text-slate-700">
+                        <td className="px-4 py-2 text-slate-700 text-center">
                           {leave.remainingLeave}
                         </td>
                       </tr>

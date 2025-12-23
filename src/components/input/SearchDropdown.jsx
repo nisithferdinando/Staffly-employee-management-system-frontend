@@ -5,6 +5,7 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  CircularProgress,
 } from "@mui/material";
 
 const SearchDropdown = ({
@@ -65,7 +66,9 @@ const SearchDropdown = ({
       error={isError}
     >
       {label && (
-        <FormLabel sx={{ fontSize: "14px", marginBottom: "4px" }}>
+        <FormLabel
+          sx={{ fontSize: "14px", marginBottom: "4px", color: "black" }}
+        >
           {label}
           {required && <span style={{ color: "red" }}> *</span>}
         </FormLabel>
@@ -76,8 +79,14 @@ const SearchDropdown = ({
         loading={loading}
         value={value}
         disabled={disabled}
+        popupIcon={null}
+        filterOptions={(x) => x}
         onChange={(e, newValue) => onChange(name, newValue)}
-        onInputChange={(e, newValue) => setSearchText(newValue)}
+        onInputChange={(e, newValue, reason) => {
+          if ((reason = "input")) {
+            setSearchText(newValue);
+          }
+        }}
         getOptionLabel={(opt) => opt?.text1 ?? ""}
         isOptionEqualToValue={(opt, val) => opt?.id === val?.id}
         renderInput={(params) => (
@@ -86,6 +95,15 @@ const SearchDropdown = ({
             placeholder={placeholder}
             error={isError}
             size="small"
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {loading && <CircularProgress size={16} />}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
           />
         )}
       />

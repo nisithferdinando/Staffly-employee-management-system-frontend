@@ -3,7 +3,7 @@ import axiosInstance from "../../util/axiosInstance";
 export const getSearchDropdown = async ({
   type,
   value,
-  searchtext,
+  searchText,
   param1,
   param2,
   param3,
@@ -14,7 +14,7 @@ export const getSearchDropdown = async ({
       params: {
         type,
         value,
-        searchtext,
+        searchText,
         param1,
         param2,
         param3,
