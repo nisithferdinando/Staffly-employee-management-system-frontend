@@ -13,12 +13,17 @@ import Loader from "../../loader/Loader";
 import Toast from "../Toast/Toast";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import SearchDropdown from "../input/SearchDropdown";
+import { getSearchDropdown } from "../searchDropdown/searchDropdown";
 
 const EmployeeLeave = () => {
   const [leaveType, setLeaveType] = useState([]);
   const [form, setForm] = useState({
     leaveType: "",
     leaveDate: "",
+    coveringPersonName: null,
+    coveringPerson: null,
+    remarks: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -43,6 +48,14 @@ const EmployeeLeave = () => {
     if (name === "leaveType") {
       handleLeaveType(value);
       setForm((prev) => ({ ...prev, leaveDate: "" }));
+    }
+    if (name === "approver") {
+      setForm((prev) => ({
+        ...prev,
+        approver: value,
+        approverId: value?.id ?? null,
+      }));
+      return;
     }
 
     if (errors[name]) {
@@ -87,18 +100,21 @@ const EmployeeLeave = () => {
 
       try {
         const leaveRequest = {
-          ...form,
           employee: employee.id,
           employeeNo: employee.employeeNo,
           firstName: employee.firstName,
           lastName: employee.lastName,
+          leaveType: form.leaveType,
+          leaveDate: form.leaveDate,
           createdBy: employee.fullName,
+          coveringPerson: form.coveringPerson,
+          remarks: form.remarks,
           updatedBy: "",
         };
 
         console.log("Submit Payload", leaveRequest);
 
-        const response = await axiosInstance.post("/leave/add", leaveRequest);
+        //const response = await axiosInstance.post("/leave/add", leaveRequest);
         if (!response.data.success) {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           toast.warning(response.data.message);
@@ -167,6 +183,21 @@ const EmployeeLeave = () => {
                     min={minDate}
                     max={maxDate}
                   />
+                 
+                  <SearchDropdown
+                    label="Approver"
+                    name="approver"
+                    placeholder="Search employee"
+                    value={form.approver}
+                    api={getSearchDropdown}
+                    apiDependency={{
+                      type: "employee",
+                      param1: employee?.department,
+                    }}
+                    onChange={handleChange}
+                    errorMessage={errors}
+                    required={true}
+                  />
                 </div>
                 <div className="mt-4">
                   <Button label="Submit" onClick={handleSubmit} />
@@ -198,16 +229,16 @@ const EmployeeLeave = () => {
                   <tbody className="">
                     {leaveSummary.map((leave) => (
                       <tr key={leave.id} className="">
-                        <td className="px-4 py-3 text-slate-950 text-lg">
+                        <td className="px-4 py-3 text-slate-950 text-lg ">
                           {leave.leaveTypeName}
                         </td>
-                        <td className="px-4 py-2 text-slate-500">
+                        <td className="px-4 py-2 text-slate-500 text-center">
                           {leave.allowedLeave}
                         </td>
-                        <td className="px-4 py-2 text-blue-500">
+                        <td className="px-4 py-2 text-blue-500 text-center">
                           {leave.usedLeave}
                         </td>
-                        <td className="px-4 py-2 text-slate-700">
+                        <td className="px-4 py-2 text-slate-700 text-center">
                           {leave.remainingLeave}
                         </td>
                       </tr>
