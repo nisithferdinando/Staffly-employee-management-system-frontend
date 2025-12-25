@@ -16,13 +16,13 @@ const Input = ({
   errorMessage = {},
 }) => {
   if (width === "sm") {
-    width = "144px";
+    width = "200px";
   } else if (width === "md") {
     width = "280px";
   } else if (width === "lg") {
-    width === "350px";
+    width = "350px";
   } else {
-    width === "100%";
+    width = "100%";
   }
   const finalError = errorMessage?.[name] || "";
   const isError = !!finalError;
@@ -52,7 +52,7 @@ const Input = ({
         className={className}
         size={size}
         error={isError}
-        onChange={onChange}
+        onChange={(e) => onChange(name, e.target.value)}
         sx={{
           height: "37px",
           width: width,

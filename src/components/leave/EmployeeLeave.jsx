@@ -49,15 +49,6 @@ const EmployeeLeave = () => {
       handleLeaveType(value);
       setForm((prev) => ({ ...prev, leaveDate: "" }));
     }
-    if (name === "approver") {
-      setForm((prev) => ({
-        ...prev,
-        approver: value,
-        approverId: value?.id ?? null,
-      }));
-      return;
-    }
-
     if (errors[name]) {
       setErrors({ ...errors, [name]: null });
     }
@@ -107,14 +98,14 @@ const EmployeeLeave = () => {
           leaveType: form.leaveType,
           leaveDate: form.leaveDate,
           createdBy: employee.fullName,
-          coveringPerson: form.coveringPerson,
+          coveringPerson: form.coveringPerson.id,
           remarks: form.remarks,
           updatedBy: "",
         };
 
         console.log("Submit Payload", leaveRequest);
 
-        //const response = await axiosInstance.post("/leave/add", leaveRequest);
+        const response = await axiosInstance.post("/leave/add", leaveRequest);
         if (!response.data.success) {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           toast.warning(response.data.message);
@@ -183,20 +174,32 @@ const EmployeeLeave = () => {
                     min={minDate}
                     max={maxDate}
                   />
-                 
+                </div>
+                <div className="flex space-x-8 mt-2">
                   <SearchDropdown
-                    label="Approver"
-                    name="approver"
+                    label="Covering Person"
+                    name="coveringPerson"
                     placeholder="Search employee"
-                    value={form.approver}
+                    value={form.coveringPerson}
                     api={getSearchDropdown}
                     apiDependency={{
                       type: "employee",
+                      value: employee?.id,
                       param1: employee?.department,
                     }}
                     onChange={handleChange}
                     errorMessage={errors}
                     required={true}
+                  />
+                  <Input
+                    label="Remarks"
+                    type="text"
+                    name="remarks"
+                    placeholder="remarks"
+                    value={form.remarks}
+                    width="sm"
+                    onChange={handleChange}
+                    errorMessage={errors}
                   />
                 </div>
                 <div className="mt-4">
