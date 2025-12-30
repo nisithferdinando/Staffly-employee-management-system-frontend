@@ -52,7 +52,7 @@ const DashboardLayout = () => {
           style={{
             marginLeft: visible ? SIDEBAR_WIDTH : 0,
             flex: 1,
-            backgroundColor: "#fff",
+            backgroundColor: "#f3f4f6 ",
             overflowY: "auto",
             transition: "margin-left 0.3s ease-in-out",
             height: "100%",

@@ -30,6 +30,7 @@ const EmployeeLeave = () => {
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
   const [leaveSummary, setLeaveSummary] = useState([]);
+  const [leaves, setLeaves] = useState([]);
 
   const employee = useEmployee();
 
@@ -138,6 +139,14 @@ const EmployeeLeave = () => {
 
   console.log("leave summary", leaveSummary);
 
+  useEffect(() => {
+    (async () => {
+      const response = await axiosInstance.get(`/leave/all/${employeeId}`);
+      setLeaves(response.data);
+    })();
+  }, [employeeId]);
+  console.log("current leaves", leaves);
+
   return (
     <div>
       <Toast position="top-right" autoClose={3000} theme="colored" />
@@ -146,7 +155,7 @@ const EmployeeLeave = () => {
       ) : (
         <div>
           <div className="flex justify-between mt-8 m-8">
-            <div className="bg-gray-100 p-12 mt-10 rounded-lg shadow-sm">
+            <div className="bg-white p-12 mt-10 rounded-lg shadow-sm">
               <div className="flex flex-col">
                 <h1 className="mt-8 text-blue-950 text-[20px]">
                   Employee Leave Application
@@ -207,7 +216,7 @@ const EmployeeLeave = () => {
                 </div>
               </div>
             </div>
-            <div className="mr-8 mt-10 bg-gray-100/85 p-12 rounded-lg shadow-sm">
+            <div className="mr-8 mt-10 bg-white p-12 rounded-lg shadow-sm">
               <h1 className="mt-8 mb-8 text-blue-950 text-[20px] text-center">
                 Leave Balance
               </h1>
@@ -250,6 +259,20 @@ const EmployeeLeave = () => {
                 </table>
               </div>
             </div>
+          </div>
+          <div className="mt-24 mx-8 bg-white rounded-lg p-8">
+            <h1 className="text-gray-700 text-xl">Current Leaves</h1>
+            <Table
+              columns={[
+                { label: "Leave Type", key: "leaveType" },
+                { label: "Leave Date", key: "leaveDate" },
+                { label: "Covering Person", key: "coveringPerson" },
+                { label: "Remarks", key: "remarks" },
+              ]}
+              data={leaves}
+              defaultRowsPerPage={10}
+              
+            />
           </div>
         </div>
       )}
