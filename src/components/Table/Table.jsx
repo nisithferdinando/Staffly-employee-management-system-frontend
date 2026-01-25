@@ -17,7 +17,7 @@ const Table = ({
   actions = [],
   emptyText = "No records found.",
   rowsPerPageOptions = [5, 10, 25],
-  defaultRowsPerPage = 10,
+  defaultRowsPerPage,
   tableHeight = "auto",
   sizeVariant = "md",
   paddingVariant = "md",
@@ -90,6 +90,7 @@ const Table = ({
               {columns.map((col, idx) => (
                 <TableCell
                   key={idx}
+                  align="center"
                   sx={{
                     fontWeight: "bold",
                     fontSize: "16px",
@@ -103,6 +104,7 @@ const Table = ({
 
               {actions.length > 0 && (
                 <TableCell
+                  align="center"
                   sx={{
                     fontWeight: "bold",
                     fontSize: "16px",
@@ -131,13 +133,30 @@ const Table = ({
                     }}
                   >
                     {columns.map((col, j) => (
-                      <TableCell key={j} align="center">
-                        {row[col.key]}
+                      <TableCell key={j} align={col.align || "center"}>
+                        {col.button ? (
+                          <MUIButton
+                            size="small"
+                            variant={col.variant || "contained"}
+                            color={col.color || "primary"}
+                            disabled={col.disabled ? col.disabled(row) : false}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              col.onClick?.(row);
+                            }}
+                          >
+                            {typeof col.buttonLabel === "function"
+                              ? col.buttonLabel(row)
+                              : col.buttonLabel || col.label}
+                          </MUIButton>
+                        ) : (
+                          row[col.key]
+                        )}
                       </TableCell>
                     ))}
 
                     {actions.length > 0 && (
-                      <TableCell>
+                      <TableCell align="center">
                         {actions.map((act, k) => (
                           <MUIButton
                             key={k}
