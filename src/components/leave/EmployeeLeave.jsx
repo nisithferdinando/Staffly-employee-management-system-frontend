@@ -15,6 +15,8 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import SearchDropdown from "../input/SearchDropdown";
 import { getSearchDropdown } from "../searchDropdown/searchDropdown";
+import Modal from "../modal/Modal";
+import EmployeeLeaveUpdate from "./EmployeeLeaveUpdate";
 
 const EmployeeLeave = () => {
   const [leaveType, setLeaveType] = useState([]);
@@ -31,6 +33,8 @@ const EmployeeLeave = () => {
   const [maxDate, setMaxDate] = useState("");
   const [leaveSummary, setLeaveSummary] = useState([]);
   const [leaves, setLeaves] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [selectedLeave, setSelectedLeave] = useState(null);
 
   const employee = useEmployee();
 
@@ -140,12 +144,19 @@ const EmployeeLeave = () => {
   console.log("leave summary", leaveSummary);
 
   useEffect(() => {
+    if (!employee?.id) return;
     (async () => {
       const response = await axiosInstance.get(`/leave/all/${employeeId}`);
       setLeaves(response.data);
     })();
   }, [employeeId]);
-  console.log("current leaves", leaves);
+
+  const handleEditLeave = async (row) => {
+    const getLeave = await axiosInstance.get(`/leave/${row.id}`);
+    setSelectedLeave(getLeave.data);
+    console.log("select leave", selectedLeave);
+    setOpen(true);
+  };
 
   return (
     <div>
@@ -261,19 +272,47 @@ const EmployeeLeave = () => {
             </div>
           </div>
           <div className="mt-24 mx-8 bg-white rounded-lg p-8">
-            <h1 className="text-gray-700 text-xl">Current Leaves</h1>
+            <h1 className="text-gray-700 text-2xl text-center">
+              Current Leaves
+            </h1>
+
             <Table
               columns={[
-                { label: "Leave Type", key: "leaveType" },
+                { label: "Leave Type", key: "leaveTypeValue" },
                 { label: "Leave Date", key: "leaveDate" },
-                { label: "Covering Person", key: "coveringPerson" },
+                { label: "Covering Person", key: "coveringPersonName" },
                 { label: "Remarks", key: "remarks" },
+                { label: "Leave Status", key: "leaveStatusValue" },
+                { label: "Active", key: "activeValue" },
+                {
+                  label: "Update Leave",
+                  button: true,
+                  buttonLabel: "Update",
+                  onClick: (row) => {
+                    handleEditLeave(row);
+                  },
+                  disabled: (row) => row.leaveStatus === 1,
+                },
               ]}
               data={leaves}
-              defaultRowsPerPage={10}
-              
+              defaultRowsPerPage={7}
+              sizeVariant="sm"
+              actions={[
+                {
+                  label: "Cancel",
+                  color: "error",
+                },
+              ]}
             />
           </div>
+          <EmployeeLeaveUpdate
+            show={open}
+            onClose={() => setOpen(false)}
+            //onUpdated={fetchLeaves}
+            leave={selectedLeave}
+            employee={employee}
+            leaveTypeOptions={leaveType}
+          />
         </div>
       )}
     </div>
