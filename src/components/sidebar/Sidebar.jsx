@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 
 import HomeIcon from "@mui/icons-material/Home";
 import { Box } from "@mui/material";
@@ -88,7 +89,25 @@ const AppSidebar = ({ visible, onHide }) => {
               <ExitToAppIcon sx={{ marginRight: 1 }} />
               <Box component="span">Leave</Box>
             </Box>
-
+             <Box
+              component={Link}
+              to="/employee/attendance"
+              onClick={onHide}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                padding: "8px 16px",
+                textDecoration: "none",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "gainsboro",
+                },
+                borderRadius: 1,
+              }}
+            >
+              <NetworkCheckIcon sx={{ marginRight: 1 }} />
+              <Box component="span">Attendance</Box>
+            </Box> 
 
           </div>
         )}
