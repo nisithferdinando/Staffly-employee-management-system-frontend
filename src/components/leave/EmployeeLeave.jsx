@@ -301,6 +301,7 @@ const EmployeeLeave = () => {
                 {
                   label: "Cancel",
                   color: "error",
+                  
                 },
               ]}
             />

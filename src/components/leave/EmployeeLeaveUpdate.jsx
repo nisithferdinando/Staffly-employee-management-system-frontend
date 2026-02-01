@@ -72,7 +72,6 @@ const EmployeeLeaveUpdate = ({
           updatedBy: employee.fullName,
           coveringPerson: form.coveringPerson.id,
           remarks: form.remarks,
-          updatedBy: employee?.fullName || "",
         };
 
         const res = await axiosInstance.put(
