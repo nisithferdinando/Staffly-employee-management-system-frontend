@@ -13,10 +13,11 @@ const EmployeeLogin = () => {
   const [formToogle, setFormTogle] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+  const handleChange = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const validateForm = () => {
@@ -45,7 +46,10 @@ const EmployeeLogin = () => {
         "EmployeeEmail",
         response.data.employeeLoginDetails.email
       );
-      localStorage.setItem("userId", response.data.employeeLoginDetails.employee);
+      localStorage.setItem(
+        "userId",
+        response.data.employeeLoginDetails.employee
+      );
       localStorage.setItem("role", response.data.role);
       setValidationErrors("");
       navigate("/employee/dashboard");

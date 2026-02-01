@@ -37,7 +37,7 @@ const DateTimePicker = ({
   const inputType = showTime ? "time" : "date";
 
   return (
-    <FormControl margin="dense" sx={{ width: "180px" }} error={isError}>
+    <FormControl margin="dense" sx={{ width: "200px" }} error={isError}>
       {label && (
         <FormLabel
           component="legend"

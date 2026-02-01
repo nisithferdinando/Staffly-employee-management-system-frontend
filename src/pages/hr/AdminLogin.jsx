@@ -10,13 +10,14 @@ const AdminLogin = () => {
   const [errors, setErrors] = useState({});
   const [validationErrors, setValidationErrors] = useState("");
   const [loading, setLoading] = useState(false);
-  const [formToogle, setFormTogle]= useState(false);
+  const [formToogle, setFormTogle] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+  const handleChange = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const validateForm = () => {
@@ -116,18 +117,18 @@ const AdminLogin = () => {
               <span>Remember me</span>
             </label>
           </div>
-            <div className="flex space-x-4">
-          <Button
-            type="submit"
-            label={loading ? "Logging in..." : "Login"}
-            disabled={loading}
-          />
-          <Button
-            type="button"
-            label="Login as Employee"
-            disabled={loading}
-            onClick={() => navigate("/employee/login")}
-          />
+          <div className="flex space-x-4">
+            <Button
+              type="submit"
+              label={loading ? "Logging in..." : "Login"}
+              disabled={loading}
+            />
+            <Button
+              type="button"
+              label="Login as Employee"
+              disabled={loading}
+              onClick={() => navigate("/employee/login")}
+            />
           </div>
         </form>
       </div>

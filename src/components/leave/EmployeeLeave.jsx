@@ -12,17 +12,29 @@ import useEmployee from "../../hook/useEmployee";
 import Loader from "../../loader/Loader";
 import Toast from "../Toast/Toast";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import SearchDropdown from "../input/SearchDropdown";
+import { getSearchDropdown } from "../searchDropdown/searchDropdown";
+import Modal from "../modal/Modal";
+import EmployeeLeaveUpdate from "./EmployeeLeaveUpdate";
 
 const EmployeeLeave = () => {
   const [leaveType, setLeaveType] = useState([]);
   const [form, setForm] = useState({
     leaveType: "",
     leaveDate: "",
+    coveringPersonName: null,
+    coveringPerson: null,
+    remarks: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
+  const [leaveSummary, setLeaveSummary] = useState([]);
+  const [leaves, setLeaves] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [selectedLeave, setSelectedLeave] = useState(null);
 
   const employee = useEmployee();
 
@@ -42,7 +54,6 @@ const EmployeeLeave = () => {
       handleLeaveType(value);
       setForm((prev) => ({ ...prev, leaveDate: "" }));
     }
-
     if (errors[name]) {
       setErrors({ ...errors, [name]: null });
     }
@@ -60,8 +71,8 @@ const EmployeeLeave = () => {
       const dayAfter = new Date();
       dayAfter.setDate(today.getDate() + 2);
 
-      //setMinDate(formatDate(tomorrow));
-      //setMaxDate(formatDate(dayAfter));
+      setMinDate(formatDate(tomorrow));
+      setMaxDate(formatDate(dayAfter));
     } else if (type === 2) {
       const monthAfter = new Date();
       monthAfter.setDate(today.getDate() + 30);
@@ -85,12 +96,15 @@ const EmployeeLeave = () => {
 
       try {
         const leaveRequest = {
-          ...form,
           employee: employee.id,
           employeeNo: employee.employeeNo,
           firstName: employee.firstName,
           lastName: employee.lastName,
+          leaveType: form.leaveType,
+          leaveDate: form.leaveDate,
           createdBy: employee.fullName,
+          coveringPerson: form.coveringPerson.id,
+          remarks: form.remarks,
           updatedBy: "",
         };
 
@@ -117,6 +131,33 @@ const EmployeeLeave = () => {
     }
   };
 
+  const employeeId = employee?.id;
+
+  useEffect(() => {
+    if (!employee?.id) return;
+    (async () => {
+      const response = await axiosInstance.get(`/leave/summary/${employeeId}`);
+      setLeaveSummary(response.data);
+    })();
+  }, [employee]);
+
+  console.log("leave summary", leaveSummary);
+
+  useEffect(() => {
+    if (!employee?.id) return;
+    (async () => {
+      const response = await axiosInstance.get(`/leave/all/${employeeId}`);
+      setLeaves(response.data);
+    })();
+  }, [employeeId]);
+
+  const handleEditLeave = async (row) => {
+    const getLeave = await axiosInstance.get(`/leave/${row.id}`);
+    setSelectedLeave(getLeave.data);
+    console.log("select leave", selectedLeave);
+    setOpen(true);
+  };
+
   return (
     <div>
       <Toast position="top-right" autoClose={3000} theme="colored" />
@@ -125,9 +166,9 @@ const EmployeeLeave = () => {
       ) : (
         <div>
           <div className="flex justify-between mt-8 m-8">
-            <div>
+            <div className="bg-white p-12 mt-10 rounded-lg shadow-sm">
               <div className="flex flex-col">
-                <h1 className="pt-12 text-blue-950 text-[20px]">
+                <h1 className="mt-8 text-blue-950 text-[20px]">
                   Employee Leave Application
                 </h1>
 
@@ -154,28 +195,124 @@ const EmployeeLeave = () => {
                     max={maxDate}
                   />
                 </div>
+                <div className="flex space-x-8 mt-2">
+                  <SearchDropdown
+                    label="Covering Person"
+                    name="coveringPerson"
+                    placeholder="Search employee"
+                    value={form.coveringPerson}
+                    api={getSearchDropdown}
+                    apiDependency={{
+                      type: "employee",
+                      value: employee?.id,
+                      param1: employee?.department,
+                    }}
+                    onChange={handleChange}
+                    errorMessage={errors}
+                    required={true}
+                  />
+                  <Input
+                    label="Remarks"
+                    type="text"
+                    name="remarks"
+                    placeholder="remarks"
+                    value={form.remarks}
+                    width="sm"
+                    onChange={handleChange}
+                    errorMessage={errors}
+                  />
+                </div>
                 <div className="mt-4">
                   <Button label="Submit" onClick={handleSubmit} />
                 </div>
               </div>
             </div>
-            <div className="mr-12">
-              <h1 className="pt-12 text-blue-950 text-[20px] text-center">
+            <div className="mr-8 mt-10 bg-white p-12 rounded-lg shadow-sm">
+              <h1 className="mt-8 mb-8 text-blue-950 text-[20px] text-center">
                 Leave Balance
               </h1>
-              <Table
-                columns={[
-                  { label: "Leave Type", key: "name" },
-                  { label: "Total Leave", key: "name" },
-                  { label: "Used Leave", key: "category" },
-                  { label: "Available Leave", key: "active" },
-                ]}
-                //data={}
-                sizeVariant="sm"
-                paddingVariant="lg"
-              />
+              <div className="px-4">
+                <table className="divide-y-2">
+                  <thead className="bg-slate-200">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-lg font-semibold text-gray-700">
+                        Leave Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-lg font-semibold text-gray-700">
+                        Allowed Leave
+                      </th>
+                      <th className="px-4 py-2 text-left text-lg font-semibold text-gray-700">
+                        Used Leaved
+                      </th>
+                      <th className="px-4 py-2 text-left text-lg font-semibold text-gray-700">
+                        Remaining Leave
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="">
+                    {leaveSummary.map((leave) => (
+                      <tr key={leave.id} className="">
+                        <td className="px-4 py-3 text-slate-950 text-lg ">
+                          {leave.leaveTypeName}
+                        </td>
+                        <td className="px-4 py-2 text-slate-500 text-center">
+                          {leave.allowedLeave}
+                        </td>
+                        <td className="px-4 py-2 text-blue-500 text-center">
+                          {leave.usedLeave}
+                        </td>
+                        <td className="px-4 py-2 text-slate-700 text-center">
+                          {leave.remainingLeave}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+          <div className="mt-24 mx-8 bg-white rounded-lg p-8">
+            <h1 className="text-gray-700 text-2xl text-center">
+              Current Leaves
+            </h1>
+
+            <Table
+              columns={[
+                { label: "Leave Type", key: "leaveTypeValue" },
+                { label: "Leave Date", key: "leaveDate" },
+                { label: "Covering Person", key: "coveringPersonName" },
+                { label: "Remarks", key: "remarks" },
+                { label: "Leave Status", key: "leaveStatusValue" },
+                { label: "Active", key: "activeValue" },
+                {
+                  label: "Update Leave",
+                  button: true,
+                  buttonLabel: "Update",
+                  onClick: (row) => {
+                    handleEditLeave(row);
+                  },
+                  disabled: (row) => row.leaveStatus === 1,
+                },
+              ]}
+              data={leaves}
+              defaultRowsPerPage={7}
+              sizeVariant="sm"
+              actions={[
+                {
+                  label: "Cancel",
+                  color: "error",
+                },
+              ]}
+            />
+          </div>
+          <EmployeeLeaveUpdate
+            show={open}
+            onClose={() => setOpen(false)}
+            //onUpdated={fetchLeaves}
+            leave={selectedLeave}
+            employee={employee}
+            leaveTypeOptions={leaveType}
+          />
         </div>
       )}
     </div>
