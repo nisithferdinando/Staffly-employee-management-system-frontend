@@ -260,7 +260,6 @@ const EmployeeAttendance = () => {
                   errorMessage={errors}
                   required
                 />
-
                 <DateTimePicker
                   label="Date"
                   name="attendanceDate"
@@ -297,7 +296,7 @@ const EmployeeAttendance = () => {
               getRowId={(r) => r.id}
               selectMode="single"
               tableHeight={650}
-              defaultRowsPerPage={5}
+              defaultRowsPerPage={8}
               actions={[
                 {
                   key: "update",
