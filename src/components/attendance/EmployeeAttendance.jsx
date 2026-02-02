@@ -1,128 +1,17 @@
-import React, {useEffect, useState} from 'react'
-import Input from '../input/Input';
+import React, { useEffect, useMemo, useState } from "react";
+import Input from "../input/Input";
 import Dropdown from "../input/Dropdown";
 import DateTimePicker from "../input/DateTimePicker";
 import Button from "../button/Button";
-import Loader from '../../loader/Loader';
-import { validateForm } from '../../util/formValidators';
-import { getKeyValue } from '../keyvalue/keyValueData';
+import Loader from "../../loader/Loader";
+import { validateForm } from "../../util/formValidators";
+import { getKeyValue } from "../keyvalue/keyValueData";
 import Toast from "../Toast/Toast";
 import { toast } from "react-toastify";
-import useEmployee from '../../hook/useEmployee';
-import axiosInstance from '../../util/axiosInstance';
-import { validateEmployeeAttendance } from '../../validations/employeeAttendanceValidations';
-
-// const EmployeeAttendance = () => {
-//    const [form, setForm] = useState({
-//        attendanceType: "",
-//        attendanceDate: "",
-//        attendanceTime: "",
-//      });
-//    const [errors, setErrors] = useState({});
-//      const [loading, setLoading] = useState(false);
-//      const [minDate, setMinDate] = useState("");
-//      const [maxDate, setMaxDate] = useState("");
-//      const [attendanceType, setAttendanceType] = useState([]);
-//      useEffect(() => {
-//         (async () => {
-//           const getAttendanceType = await getKeyValue("attendance_type");
-//           setAttendanceType(getAttendanceType);
-//         })();
-//       }, []);
-
-//     const handleChange = (name, value) => {
-//     setForm({
-//       ...form,
-//       [name]: value,
-//     });
-//     if (name === "attendanceType") {
-//       handleAttendanceType(value);
-//       setForm((prev) => (
-//         { ...prev, attendanceDate: "" },
-//         { ...prev, attendanceTime: "" }
-//       ));
-//     }
-
-//     if (errors[name]) {
-//       setErrors({ ...errors, [name]: null });
-//     }
-//   };
-
-//   const handleAttendanceType = (type) => {
-//     const today = new Date();
-
-//     if (type === 1) {
-//       const tomorrow = new Date();
-//       tomorrow.setDate(today.getDate() + 1);
-
-//       const dayAfter = new Date();
-//       dayAfter.setDate(today.getDate() + 2);
-
-//       //setMinDate(formatDate(tomorrow));
-//       //setMaxDate(formatDate(dayAfter));
-//     } else if (type === 2) {
-//       const monthAfter = new Date();
-//       monthAfter.setDate(today.getDate() + 30);
-//       setMinDate(formatDate(monthAfter));
-//       setMaxDate("");
-//     } else if (type === 3) {
-//       setMinDate(formatDate(today));
-//       setMaxDate(formatDate(today));
-//     } else {
-//       setMinDate("");
-//       setMaxDate("");
-//     }
-//   };
-//   return (
-//     <div>
-//         <div className="flex justify-between mt-8 m-8">
-//           <div>
-//             <div className="flex flex-col">
-//               <h1 className="pt-12 text-blue-950 text-[20px]">
-//                 Employee Atttendance Application
-//               </h1>
-//               <div className="flex space-x-8 mt-2">
-//                 <Dropdown
-//                   label="Attendance Type"
-//                   placeholder="Attendance Type"
-//                   name="attendanceType"
-//                   options={attendanceType}
-//                   value={form.attendanceType}
-//                   required={true}
-//                   errorMessage={errors}
-//                 />
-//                 <DateTimePicker
-//                   label="Date"
-//                   required={true}
-//                   showTime={false}
-//                   name="attendanceDate"
-//                   errorMessage={errors}
-//                 />
-//               </div>
-//               <div className="flex space-x-8 mt-2">
-//                 <DateTimePicker
-//                   label="Time"
-//                   required={true}
-//                   showTime={true}
-//                   name="attendanceTime"
-//                   errorMessage={errors}
-//                   min={minDate}
-//                   max={maxDate}
-//                 />
-//               </div>
-//               <div className="mt-4">
-//                 <Button label="Submit"/>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//   )
-// }
-
-// export default EmployeeAttendance;
-
-
+import useEmployee from "../../hook/useEmployee";
+import axiosInstance from "../../util/axiosInstance";
+import { validateEmployeeAttendance } from "../../validations/employeeAttendanceValidations";
+import Grid from "../grid/Grid";
 
 const EmployeeAttendance = () => {
   const [attendanceType, setAttendanceType] = useState([]);
@@ -133,18 +22,34 @@ const EmployeeAttendance = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [gridLoading, setGridLoading] = useState(false);
+  const [gridData, setGridData] = useState([]);
 
   const employee = useEmployee();
 
-  // Load attendance types
   useEffect(() => {
     (async () => {
       const data = await getKeyValue("attendance_type");
       setAttendanceType(data);
+      console.log("attendanceType raw:", data);
     })();
   }, []);
 
-  // Handle input changes
+  const attendanceTypeOptions = useMemo(() => {
+    return (attendanceType || []).map((x) => ({
+      value: x.value ?? x.value ?? x.id,
+      label: x.label ?? x.valueName ?? x.name,
+    }));
+  }, [attendanceType]);
+
+  console.log("attendanceTypeOptions:", attendanceTypeOptions);
+
+  const normalizeTimeToHHmmss = (t) => {
+    if (!t) return null;
+    if (typeof t === "string" && t.length === 5) return `${t}:00`;
+    return t;
+  };
+
   const handleChange = (name, value) => {
     setForm({
       ...form,
@@ -156,7 +61,70 @@ const EmployeeAttendance = () => {
     }
   };
 
-  // Submit attendance
+  const loadDaily = async () => {
+    if (!employee?.id) return;
+
+    setGridLoading(true);
+    try {
+      const res = await axiosInstance.get(`/attendance/${employee.id}`);
+      const list = res?.data || [];
+
+      const map = new Map();
+
+      for (const r of list) {
+        const date = r.attendanceDate;
+        if (!date) continue;
+
+        if (!map.has(date)) {
+          map.set(date, {
+            id: `${employee.id}_${date}`,
+            employeeId: r.employeeId ?? employee.id,
+            employeeNo: r.employeeNo,
+            firstName: r.firstName,
+            lastName: r.lastName,
+
+            attendanceDate: date,
+            inType: 1,
+            outType: 2,
+            inTime: null,
+            outTime: null,
+
+            inId: null,
+            outId: null,
+          });
+        }
+
+        const row = map.get(date);
+
+        const type = r.attendanceType;
+        const time = r.attendanceTime;
+
+        if (String(type) === "1") {
+          row.inTime = time;
+          row.inId = r.id;
+        }
+        if (String(type) === "2") {
+          row.outTime = time;
+          row.outId = r.id;
+        }
+      }
+
+      const result = Array.from(map.values()).sort((a, b) =>
+        String(b.attendanceDate).localeCompare(String(a.attendanceDate)),
+      );
+
+      setGridData(result);
+    } catch (e) {
+      toast.error("Failed to load attendance list");
+    } finally {
+      setGridLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDaily();
+  }, [employee?.id]);
+
   const handleSubmit = async () => {
     const result = validateForm(form, validateEmployeeAttendance);
     setErrors(result);
@@ -166,14 +134,14 @@ const EmployeeAttendance = () => {
       try {
         const attendanceRequest = {
           ...form,
-          employee: employee.id,
+          employeeId: employee.id,
           firstName: employee.firstName,
           lastName: employee.lastName,
           attendanceConfirmed: employee.attendanceConfirmed,
           active: employee.active,
           status: employee.status,
-          createdBy: employee.createdBy,
-          updatedBy: employee.updatedBy,
+          createdBy: employee.firstName,
+          updatedBy: employee.firstName,
           employeeNo: employee.employeeNo,
         };
 
@@ -181,13 +149,13 @@ const EmployeeAttendance = () => {
 
         const response = await axiosInstance.post(
           "/attendance/add",
-          payload
+          attendanceRequest,
         );
 
         if (!response.data.success) {
-           await new Promise((resolve) => setTimeout(resolve, 1000));
-           toast.warning(response.data.message);
-           return;
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          toast.warning(response.data.message);
+          return;
         }
         await new Promise((resolve) => setTimeout(resolve, 1000));
         toast.success("Attendance added successfully");
@@ -196,6 +164,7 @@ const EmployeeAttendance = () => {
           attendanceDate: "",
           attendanceTime: "",
         });
+        await loadDaily();
       } catch (error) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         toast.error("Something went wrong");
@@ -205,56 +174,175 @@ const EmployeeAttendance = () => {
     }
   };
 
+  const updateSelectedRow = async (row) => {
+    if (row.inTime && row.outTime) {
+      const inT = String(row.inTime).slice(0, 5);
+      const outT = String(row.outTime).slice(0, 5);
+      if (outT <= inT) {
+        toast.warning(`Out time must be after In time (${row.attendanceDate})`);
+        return;
+      }
+    }
+    setGridLoading(true);
+    try {
+      if (row.inTime !== null && row.inTime !== "") {
+        await axiosInstance.put(`/attendance/update/${employee.id}`, {
+          employeeId: employee.id,
+          employeeNo: employee.employeeNo,
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          attendanceConfirmed: employee.attendanceConfirmed,
+          active: employee.active,
+          status: employee.status,
+          createdBy: employee.firstName,
+          updatedBy: employee.firstName,
+
+          attendanceDate: row.attendanceDate,
+          attendanceType: 1,
+          attendanceTime: normalizeTimeToHHmmss(row.inTime),
+        });
+      }
+
+      if (row.outTime !== null && row.outTime !== "") {
+        await axiosInstance.put(`/attendance/update/${employee?.id}`, {
+          employeeId: employee.id,
+          employeeNo: employee.employeeNo,
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          attendanceConfirmed: employee.attendanceConfirmed,
+          active: employee.active,
+          status: employee.status,
+          createdBy: employee.firstName,
+          updatedBy: employee.firstName,
+
+          attendanceDate: row.attendanceDate,
+          attendanceType: 2,
+          attendanceTime: normalizeTimeToHHmmss(row.outTime),
+        });
+      }
+
+      toast.success("Attendance time updated");
+      await loadDaily();
+    } catch (e) {
+      toast.error("Update failed");
+    } finally {
+      setGridLoading(false);
+    }
+  };
+  const typeLabel = (val) => {
+    const opt = attendanceTypeOptions.find(
+      (o) => String(o.value) === String(val),
+    );
+    return opt?.label ?? val ?? "";
+  };
+
   return (
     <div>
       <Toast position="top-right" autoClose={3000} theme="colored" />
       {loading ? (
         <Loader />
       ) : (
-        <div className="flex justify-between mt-8 m-8">
-          <div className="flex flex-col">
-            <h1 className="pt-12 text-blue-950 text-[20px]">
-              Employee Attendance Application
-            </h1>
+        <div>
+          <div className="flex justify-between mt-8 m-8">
+            <div className="flex flex-col">
+              <h1 className="pt-12 text-blue-950 text-[20px]">
+                Employee Attendance Application
+              </h1>
 
-            <div className="flex space-x-8 mt-2">
-              <Dropdown
-                label="Attendance Type"
-                placeholder="Attendance Type"
-                name="attendanceType"
-                options={attendanceType}
-                value={form.attendanceType}
-                onChange={handleChange}
-                errorMessage={errors}
-                required
-              />
+              <div className="flex space-x-8 mt-2">
+                <Dropdown
+                  label="Attendance Type"
+                  placeholder="Attendance Type"
+                  name="attendanceType"
+                  options={attendanceTypeOptions}
+                  value={form.attendanceType}
+                  onChange={handleChange}
+                  errorMessage={errors}
+                  required
+                />
 
-              <DateTimePicker
-                label="Date"
-                name="attendanceDate"
-                value={form.attendanceDate}
-                onChange={handleChange}
-                errorMessage={errors}
-                required={true}
-                showTime={false}
-              />
+                <DateTimePicker
+                  label="Date"
+                  name="attendanceDate"
+                  value={form.attendanceDate}
+                  onChange={handleChange}
+                  errorMessage={errors}
+                  required={true}
+                  showTime={false}
+                />
+              </div>
+
+              <div className="flex space-x-8 mt-2">
+                <DateTimePicker
+                  label="Time"
+                  name="attendanceTime"
+                  value={form.attendanceTime}
+                  onChange={handleChange}
+                  errorMessage={errors}
+                  required={true}
+                  showTime={true}
+                />
+              </div>
+
+              <div className="mt-4">
+                <Button label="Submit" onClick={handleSubmit} />
+              </div>
             </div>
+          </div>
 
-            <div className="flex space-x-8 mt-2">
-              <DateTimePicker
-                label="Time"
-                name="attendanceTime"
-                value={form.attendanceTime}
-                onChange={handleChange}
-                errorMessage={errors}
-                required={true}
-                showTime = {true}
-              />
-            </div>
+          <div className="m-8 mt-8">
+            <Grid
+              title="Attendance Update"
+              data={gridData}
+              getRowId={(r) => r.id}
+              selectMode="single"
+              tableHeight={650}
+              defaultRowsPerPage={5}
+              actions={[
+                {
+                  key: "update",
+                  label: "Update Time",
+                  requiresSelection: true,
+                },
+              ]}
+              columns={[
+                { key: "attendanceDate", label: "Date", editable: false },
 
-            <div className="mt-4">
-              <Button label="Submit" onClick={handleSubmit} />
-            </div>
+                {
+                  key: "inType",
+                  label: "Attendance Type",
+                  editable: false,
+                  valueFormatter: (value) => typeLabel(value),
+                },
+
+                {
+                  key: "inTime",
+                  label: "Time (IN)",
+                  editable: true,
+                  type: "time",
+                },
+
+                {
+                  key: "outType",
+                  label: "Attendance Type",
+                  editable: false,
+                  valueFormatter: (value) => typeLabel(value),
+                },
+
+                {
+                  key: "outTime",
+                  label: "Time (OUT)",
+                  editable: true,
+                  type: "time",
+                },
+              ]}
+              onActionClick={async (actionKey, { selectedRows }) => {
+                if (actionKey !== "update") return;
+                const row = selectedRows?.[0];
+                if (!row) return;
+                await updateSelectedRow(row);
+              }}
+            />
           </div>
         </div>
       )}
