@@ -137,9 +137,9 @@ const EmployeeAttendance = () => {
           employeeId: employee.id,
           firstName: employee.firstName,
           lastName: employee.lastName,
-          attendanceConfirmed: employee.attendanceConfirmed,
-          active: employee.active,
-          status: employee.status,
+          attendanceConfirmed: 2,
+          active: 1,
+          status: 1,
           createdBy: employee.firstName,
           updatedBy: employee.firstName,
           employeeNo: employee.employeeNo,
@@ -191,9 +191,9 @@ const EmployeeAttendance = () => {
           employeeNo: employee.employeeNo,
           firstName: employee.firstName,
           lastName: employee.lastName,
-          attendanceConfirmed: employee.attendanceConfirmed,
-          active: employee.active,
-          status: employee.status,
+          attendanceConfirmed: 1,
+          active: 1,
+          status: 1,
           createdBy: employee.firstName,
           updatedBy: employee.firstName,
 
@@ -209,9 +209,9 @@ const EmployeeAttendance = () => {
           employeeNo: employee.employeeNo,
           firstName: employee.firstName,
           lastName: employee.lastName,
-          attendanceConfirmed: employee.attendanceConfirmed,
-          active: employee.active,
-          status: employee.status,
+          attendanceConfirmed: 1,
+          active: 1,
+          status: 1,
           createdBy: employee.firstName,
           updatedBy: employee.firstName,
 
@@ -260,7 +260,6 @@ const EmployeeAttendance = () => {
                   errorMessage={errors}
                   required
                 />
-
                 <DateTimePicker
                   label="Date"
                   name="attendanceDate"
@@ -297,7 +296,7 @@ const EmployeeAttendance = () => {
               getRowId={(r) => r.id}
               selectMode="single"
               tableHeight={650}
-              defaultRowsPerPage={5}
+              defaultRowsPerPage={8}
               actions={[
                 {
                   key: "update",
