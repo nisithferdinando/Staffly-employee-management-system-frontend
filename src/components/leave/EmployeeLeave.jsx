@@ -158,6 +158,16 @@ const EmployeeLeave = () => {
     setOpen(true);
   };
 
+  const handelCancelLeave = async (row) => {
+    try {
+      const response = await axiosInstance.put(`/leave/cancel/${row.id}`);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success("Leave cancelled successfully!");
+    } catch (error) {
+      console.log("cancel leave error", error);
+    }
+  };
+
   return (
     <div>
       <Toast position="top-right" autoClose={3000} theme="colored" />
@@ -291,7 +301,7 @@ const EmployeeLeave = () => {
                   onClick: (row) => {
                     handleEditLeave(row);
                   },
-                  disabled: (row) => row.leaveStatus === 1,
+                  disabled: (row) => row.leaveStatus === 1 || row.active === 2,
                 },
               ]}
               data={leaves}
@@ -301,7 +311,8 @@ const EmployeeLeave = () => {
                 {
                   label: "Cancel",
                   color: "error",
-                  
+                  onClick: (row) => handelCancelLeave(row),
+                  disabled: (row) => row.leaveStatus === 1 || row.active === 2,
                 },
               ]}
             />
@@ -309,7 +320,6 @@ const EmployeeLeave = () => {
           <EmployeeLeaveUpdate
             show={open}
             onClose={() => setOpen(false)}
-            //onUpdated={fetchLeaves}
             leave={selectedLeave}
             employee={employee}
             leaveTypeOptions={leaveType}

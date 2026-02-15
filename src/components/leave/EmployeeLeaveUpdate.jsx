@@ -13,7 +13,6 @@ import { getSearchDropdown } from "../searchDropdown/searchDropdown";
 const EmployeeLeaveUpdate = ({
   show = false,
   onClose = () => {},
-  //onUpdated = () => {},
   leave = null,
   employee = null,
   leaveTypeOptions = [],
@@ -25,6 +24,16 @@ const EmployeeLeaveUpdate = ({
 
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
+  const [employeeList, setEmployeeList] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      const response = await axiosInstance.get(
+        `/employee/${leave.coveringPerson}`,
+      );
+      setEmployeeList(response.data);
+    })();
+  }, [leave]);
 
   useEffect(() => {
     if (!leave) return;
@@ -33,14 +42,14 @@ const EmployeeLeaveUpdate = ({
       coveringPerson: leave.coveringPerson
         ? {
             id: leave.coveringPerson,
-            text1: leave.coveringPersonName,
+            text1: employeeList?.fullName,
           }
         : null,
       remarks: leave.remarks ?? "",
     });
 
     setErrors({});
-  }, [leave, show]);
+  }, [leave, show, employeeList]);
 
   const handleChange = (name, value) => {
     setForm((prev) => ({
@@ -85,7 +94,6 @@ const EmployeeLeaveUpdate = ({
         }
 
         toast.success("Leave updated successfully!");
-        //onUpdated();
         onClose();
       } catch (err) {
         const msg = err?.response?.data?.message || "Something went wrong";

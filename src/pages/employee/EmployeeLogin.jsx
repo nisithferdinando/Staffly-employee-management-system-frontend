@@ -124,7 +124,7 @@ const EmployeeLogin = () => {
               <span>Remember me</span>
             </label>
           </div>
-
+             <div className="flex gap-3">
           <Button
             type="submit"
             label={loading ? "Logging in..." : "Login"}
@@ -134,8 +134,9 @@ const EmployeeLogin = () => {
             type="button"
             label="Login as Admin"
             disabled={loading}
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/admin/login")}
           />
+          </div>
         </form>
       </div>
     </div>

@@ -17,40 +17,15 @@ const Table = ({
   actions = [],
   emptyText = "No records found.",
   rowsPerPageOptions = [5, 10, 25],
-  defaultRowsPerPage,
+  defaultRowsPerPage = 8,
   tableHeight = "auto",
-  sizeVariant = "md",
-  paddingVariant = "md",
-  rowHeight,
-  cellPadding,
-  headerPadding = "16px 18px",
-
   onRowDoubleClick = () => {},
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
 
-  const heightPresets = {
-    sm: 30,
-    md: 55,
-    lg: 70,
-  };
+  const handleChangePage = (_, newPage) => setPage(newPage);
 
-  const paddingPresets = {
-    sm: "8px 12px",
-    md: "14px 18px",
-    lg: "20px 24px",
-  };
-
-  let appliedRowHeight;
-  if (rowHeight) appliedRowHeight = rowHeight;
-  else appliedRowHeight = heightPresets[sizeVariant] || 55;
-
-  let appliedCellPadding;
-  if (cellPadding) appliedCellPadding = cellPadding;
-  else appliedCellPadding = paddingPresets[paddingVariant] || "24px 18px";
-
-  const handleChangePage = (event, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -77,11 +52,14 @@ const Table = ({
           size="small"
           sx={{
             "& .MuiTableCell-root": {
-              padding: appliedCellPadding,
-              fontSize: "15px",
+              padding: "8px 8px",
+              fontSize: "12px",
             },
-            "& .MuiTableRow-root": {
-              height: appliedRowHeight,
+            "& .MuiTableHead-root .MuiTableRow-root": {
+              height: 40,
+            },
+            "& .MuiTableBody-root .MuiTableRow-root": {
+              height: 30,
             },
           }}
         >
@@ -93,8 +71,8 @@ const Table = ({
                   align="center"
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "16px",
-                    padding: headerPadding,
+                    fontSize: "13px",
+                    padding: "10px 10px",
                     background: "#f5f5f5",
                   }}
                 >
@@ -107,8 +85,8 @@ const Table = ({
                   align="center"
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "16px",
-                    padding: headerPadding,
+                    fontSize: "13px",
+                    padding: "10px 10px",
                     background: "#f5f5f5",
                   }}
                 >
@@ -139,6 +117,13 @@ const Table = ({
                             size="small"
                             variant={col.variant || "contained"}
                             color={col.color || "primary"}
+                            sx={{
+                              minHeight: 24,
+                              padding: "2px 8px",
+                              fontSize: "11px",
+                              textTransform: "none",
+                              mr: 1,
+                            }}
                             disabled={col.disabled ? col.disabled(row) : false}
                             onClick={(e) => {
                               e.stopPropagation();
@@ -163,8 +148,15 @@ const Table = ({
                             size="small"
                             variant={act.variant || "contained"}
                             color={act.color || "primary"}
-                            sx={{ mr: 1 }}
+                            sx={{
+                              minHeight: 24,
+                              padding: "2px 8px",
+                              fontSize: "11px",
+                              textTransform: "none",
+                              mr: 1,
+                            }}
                             onClick={() => act.onClick(row)}
+                            disabled={act.disabled ? act.disabled(row) : false}
                           >
                             {act.label}
                           </MUIButton>
@@ -178,7 +170,7 @@ const Table = ({
                 <TableCell
                   colSpan={columns.length + (actions.length > 0 ? 1 : 0)}
                   align="center"
-                  sx={{ padding: "24px", fontSize: "16px" }}
+                  sx={{ padding: "12px", fontSize: "12px" }}
                 >
                   {emptyText}
                 </TableCell>
@@ -187,10 +179,7 @@ const Table = ({
 
             {emptyRows > 0 &&
               Array.from(Array(emptyRows)).map((_, i) => (
-                <TableRow
-                  key={`empty-${i}`}
-                  style={{ height: appliedRowHeight }}
-                />
+                <TableRow key={`empty-${i}`} style={{ height: 30 }} />
               ))}
           </TableBody>
         </MUITable>
