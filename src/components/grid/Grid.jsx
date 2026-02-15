@@ -28,11 +28,6 @@ const Grid = ({
   rowsPerPageOptions = [5, 10, 25],
   defaultRowsPerPage = 10,
   tableHeight = "auto",
-  sizeVariant = "sm",
-  paddingVariant = "sm",
-  rowHeight,
-  cellPadding,
-  headerPadding = "12px 14px",
   emptyText = "No records found.",
   keepSelectionOnDataChange = false,
 }) => {
@@ -53,12 +48,11 @@ const Grid = ({
     setEditedMap({});
   }, [data, keepSelectionOnDataChange]);
 
-  const heightPresets = { sm: 40, md: 55, lg: 70 };
-  const paddingPresets = { sm: "8px 10px", md: "14px 18px", lg: "20px 24px" };
-
-  const appliedRowHeight = rowHeight || heightPresets[sizeVariant] || 40;
-  const appliedCellPadding =
-    cellPadding || paddingPresets[paddingVariant] || "8px 10px";
+  const appliedRowHeight = 32;
+  const appliedCellPadding = "4px 8px";
+  const appliedHeaderPadding = "6px 8px";
+  const bodyFontSize = "12px";
+  const headerFontSize = "12px";
 
   const handleChangePage = (_, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (e) => {
@@ -83,14 +77,7 @@ const Grid = ({
     return (
       pagedRows.some((r) => selectedIds.has(getRowId(r))) && !allVisibleSelected
     );
-  }, [
-    pagedRows,
-    selectedIds,
-    selectable,
-    multiSelect,
-    getRowId,
-    allVisibleSelected,
-  ]);
+  }, [pagedRows, selectedIds, selectable, multiSelect, getRowId, allVisibleSelected]);
 
   const toggleSelectAllVisible = () => {
     if (!multiSelect) return;
@@ -241,9 +228,7 @@ const Grid = ({
 
     const isEditable = col.editable === true && col.readonly !== true;
 
-    if (!isEditable) {
-      return formatDisplayValue(value, row, col);
-    }
+    if (!isEditable) return formatDisplayValue(value, row, col);
 
     return defaultEditor(row, col);
   };
@@ -277,21 +262,18 @@ const Grid = ({
   const emptyRows = Math.max(0, (1 + page) * rowsPerPage - rows.length);
 
   return (
-    <Paper
-      sx={{ width: "100%", overflow: "hidden", borderRadius: 2, boxShadow: 1 }}
-    >
+    <Paper sx={{ width: "100%", overflow: "hidden", borderRadius: 2, boxShadow: 1 }}>
       <Stack
         direction="row"
         alignItems="center"
         justifyContent="space-between"
-        sx={{ p: 1.2, borderBottom: "1px solid #eee" }}
+        sx={{ p: 1, borderBottom: "1px solid #eee" }}
       >
         <Stack>
-          {title && <Typography fontWeight={700}>{title}</Typography>}
+          {title && <Typography fontWeight={700} fontSize={14}>{title}</Typography>}
           {selectable && (
-            <Typography variant="body2" color="text.secondary">
-              Selected: {selectedIds.size} | Edited:{" "}
-              {Object.keys(editedMap).length}
+            <Typography variant="body2" color="text.secondary" fontSize={11}>
+              Selected: {selectedIds.size} | Edited: {Object.keys(editedMap).length}
             </Typography>
           )}
         </Stack>
@@ -302,6 +284,7 @@ const Grid = ({
               key={a.key}
               variant={a.variant || "contained"}
               color={a.color || "primary"}
+              size="small"  
               disabled={
                 busyActionKey !== null ||
                 (a.requiresSelection && selectedIds.size === 0)
@@ -325,7 +308,7 @@ const Grid = ({
           sx={{
             "& .MuiTableCell-root": {
               padding: appliedCellPadding,
-              fontSize: "14px",
+              fontSize: bodyFontSize,
             },
             "& .MuiTableRow-root": { height: appliedRowHeight },
           }}
@@ -337,14 +320,15 @@ const Grid = ({
                   align="center"
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "14px",
-                    padding: headerPadding,
+                    fontSize: headerFontSize,
+                    padding: appliedHeaderPadding,
                     background: "#f5f5f5",
-                    width: 60,
+                    width: 44,
                   }}
                 >
                   {multiSelect ? (
                     <Checkbox
+                      size="small" 
                       checked={allVisibleSelected}
                       indeterminate={someVisibleSelected}
                       onChange={toggleSelectAllVisible}
@@ -361,8 +345,8 @@ const Grid = ({
                   align={col.align || "center"}
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "14px",
-                    padding: headerPadding,
+                    fontSize: headerFontSize,
+                    padding: appliedHeaderPadding,
                     background: "#f5f5f5",
                     width: col.width,
                   }}
@@ -398,6 +382,7 @@ const Grid = ({
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Checkbox
+                          size="small" 
                           checked={selected}
                           onChange={() => toggleSelectOne(row)}
                         />
@@ -417,7 +402,7 @@ const Grid = ({
                 <TableCell
                   colSpan={columns.length + (selectable ? 1 : 0)}
                   align="center"
-                  sx={{ padding: "18px", fontSize: "14px" }}
+                  sx={{ padding: "12px", fontSize: bodyFontSize }}
                 >
                   {emptyText}
                 </TableCell>
@@ -426,10 +411,7 @@ const Grid = ({
 
             {emptyRows > 0 &&
               Array.from(Array(emptyRows)).map((_, i) => (
-                <TableRow
-                  key={`empty-${i}`}
-                  style={{ height: appliedRowHeight }}
-                />
+                <TableRow key={`empty-${i}`} style={{ height: appliedRowHeight }} />
               ))}
           </TableBody>
         </MUITable>
