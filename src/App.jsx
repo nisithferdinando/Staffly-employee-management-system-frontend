@@ -24,6 +24,7 @@ const App = () => {
         <Routes>
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/employee/login" element={<EmployeeLogin />} />
+          <Route path="/" element={<Navigate to = "/employee/login"/>}/>
 
           <Route path="/" element={<DashboardLayout />}>
             <Route path="hr/dashboard" element={<AdminDashboard />} />

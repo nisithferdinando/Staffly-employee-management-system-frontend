@@ -9,7 +9,7 @@ import {
 const DateTimePicker = ({
   label = "",
   name = "",
-  value = "",
+  value = {},
   onChange = () => {},
   disabled = false,
   required = false,
