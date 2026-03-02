@@ -44,7 +44,7 @@ const Employee = () => {
     manager: "",
     designation: "",
     joiningDate: "",
-    confirmationDate: "",
+    comfirmationDate: "",
     terminationDate: "",
     basicSalary: "",
     salary: "",
@@ -111,7 +111,7 @@ const Employee = () => {
       manager: "",
       designation: "",
       joiningDate: "",
-      confirmationDate: "",
+      comfirmationDate: "",
       terminationDate: "",
       basicSalary: "",
       salary: "",
@@ -128,14 +128,17 @@ const Employee = () => {
 
   const handleSubmit = async () => {
     const result = validateForm(employee, validateEmployee);
+    console.log("Validation result:", result);
+  console.log("Employee state:", employee);
     setErrors(result);
     if (Object.keys(result).length === 0) {
+      
       setLoading(true);
 
       try {
         const employeeRequest = {
           ...employee,
-          manager: employee.manager.id,
+          manager: employee.manager?.id|| null,
           createdBy: "admin",
           updatedBy: "",
         };
@@ -379,9 +382,9 @@ const Employee = () => {
                 required={true}
               />
               <DateTimePicker
-                label="Confirmation Date"
-                name="confirmationDate"
-                value={employee.confirmationDate}
+                label="Comfirmation Date"
+                name="comfirmationDate"
+                value={employee.comfirmationDate}
                 onChange={handleChange}
               />
               <DateTimePicker
@@ -456,7 +459,7 @@ const Employee = () => {
             </div>
           </div>
           <div className=" flex space-x-4 mt-8">
-            <Button label="Submit" onClick={handleSubmit} />
+            <Button label="Submit" type="button" onClick={handleSubmit} />
             <Button label="Reset" color="default" onClick={handleReset} />
           </div>
         </div>

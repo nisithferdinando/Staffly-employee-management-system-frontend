@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Tab from "../../components/modal/Tab";
 import Employee from "../../components/employee/Employee";
+import EmployeeManagement from "../../components/employee/EmployeeManagement";
 
 const EmployeePage = () => {
   const [activeKey, setActiveKey] = useState("employee");
@@ -14,6 +15,12 @@ const EmployeePage = () => {
         </div>
       ),
     },
+    {
+      key:"employee_management",
+      title:"Employee Management",
+      content:<div> <EmployeeManagement/></div>
+      
+    }
   ];
 
   return (

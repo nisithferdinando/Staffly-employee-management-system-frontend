@@ -63,6 +63,7 @@ const EmployeeLeave = () => {
 
   const handleLeaveType = (type) => {
     const today = new Date();
+    
 
     if (type === 1) {
       const tomorrow = new Date();
