@@ -2,6 +2,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import GroupIcon from "@mui/icons-material/Group";
 
 export const sidebarData = {
   HR: [
@@ -15,6 +16,11 @@ export const sidebarData = {
       path: "/hr/leave/approval",
       icon: CheckCircleIcon,
     },
+    {
+      label:"Employee",
+      path:"/hr/employee",
+      icon:GroupIcon
+    }
   ],
   EMPLOYEE: [
     {

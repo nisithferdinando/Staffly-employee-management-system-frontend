@@ -61,7 +61,7 @@ const SearchDropdown = ({
     <FormControl
       margin="dense"
       className={className}
-      sx={{ width: "200px" }}
+      sx={{ width: "250px" }}
       size="small"
       error={isError}
     >

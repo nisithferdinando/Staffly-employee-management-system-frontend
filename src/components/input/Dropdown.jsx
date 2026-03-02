@@ -10,7 +10,7 @@ import {
 const Dropdown = ({
   label = "",
   options = [],
-  value = "",
+  value = {},
   onChange = () => {},
   name = "",
   disabled = false,

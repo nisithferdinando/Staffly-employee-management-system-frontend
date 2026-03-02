@@ -13,6 +13,7 @@ import EmployeeDashboard from "./pages/employee/employeeDashboard";
 import EmployeeLeavePage from "./pages/employee/EmployeeLeavePage";
 import EmployeeAttendancePage from "./pages/employee/EmployeeAttendancePage";
 import LeaveApprovalPage from "./pages/hr/LeaveApprovalPage";
+import EmployeePage from "./pages/hr/EmployeePage";
 
 const App = () => {
   const token = localStorage.getItem("AdminToken");
@@ -23,6 +24,7 @@ const App = () => {
         <Routes>
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/employee/login" element={<EmployeeLogin />} />
+          <Route path="/" element={<Navigate to = "/employee/login"/>}/>
 
           <Route path="/" element={<DashboardLayout />}>
             <Route path="hr/dashboard" element={<AdminDashboard />} />
@@ -30,6 +32,7 @@ const App = () => {
             <Route path="employee/leave" element={<EmployeeLeavePage />} />
             <Route path="employee/attendance" element={<EmployeeAttendancePage />} />
             <Route path="hr/leave/approval" element={<LeaveApprovalPage/>}/>
+            <Route path="hr/employee" element={<EmployeePage/>}/>
           </Route>
         </Routes>
       </Router>
