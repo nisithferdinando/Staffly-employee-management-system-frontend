@@ -178,24 +178,7 @@ const Employee = () => {
             errorMessage={true}
             required={true}
           />
-          <Input
-          label="Phone"
-          placeholder="Phone"
-          name="phone"
-          value={employee.phone}
-          onChange={handleChange}
-          errorMessage={true}
-          required={true}
-          />
-          <Input
-          label="Alternative Phone"
-          placeholder="Alternative Phone"
-          name="alternativePhone"
-          value={employee.alternativePhone}
-          onChange={handleChange}
-          errorMessage={true}
-          required={true}
-          />
+          
         </div>
         <div className="flex space-x-8 mt-2">
           <Input
@@ -233,7 +216,7 @@ const Employee = () => {
             errorMessage={true}
             required={true}
           />
-
+          
         </div>
       </div>
     </div>
