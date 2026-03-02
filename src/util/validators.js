@@ -26,3 +26,23 @@ export const number = () => (value, fieldName) => {
   if (!value) return null;
   return isNaN(value) ? `${formatLabel(fieldName)} must be a number` : null;
 };
+
+export const phone = () => (value, fieldName) => {
+  if (!value) return null;
+
+  const regex = /^0\d{9}$/;
+
+  return !regex.test(value)
+    ? `${formatLabel(fieldName)} must be a valid phone number`
+    : null;
+};
+
+export const nationalId = () => (value, fieldName) => {
+  if (!value) return null;
+
+  const regex = /^(\d{12}|\d{9}V)$/;
+
+  return !regex.test(value)
+    ? `${formatLabel(fieldName)} must be a valid NIC`
+    : null;
+};

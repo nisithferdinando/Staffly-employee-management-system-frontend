@@ -1,0 +1,33 @@
+import { email, nationalId, number, phone, required } from "../util/validators";
+
+export const validateEmployee = {
+    firstName:{required:true, validators:[]},
+    lastName:{required:true, validators:[]},
+    dateOfBirth:{required:true, validators:[]},
+    gender:{required:true, validators:[]},
+    fullName:{required:true, validators:[]},
+    state:{required:true, validators:[]},
+    email:{required:true, validators:[email()]},
+    nationalId:{required:true, validators:[nationalId()]},
+    phone:{required:true, validators:[phone()]},
+    alternativePhone:{ validators:[phone()]},
+    officeEmail:{ required:false, validators:[email()]},
+    addressNo:{required:true, validators:[]},
+    address:{required:true, validators:[]},
+    city:{required:true, validators:[]},
+    employeeType:{required:true, validators:[]},
+    branch:{required:true, validators:[]},
+    manager:{required:true, validators:[]},
+    department:{required:true, validators:[]},
+    designation:{required:true, validators:[]},
+    joiningDate:{required:true, validators:[]},
+    confirmationDate:{validators:[]},
+    terminationDate:{validators:[]},
+    basicSalary:{required:true, validators:[number()]},
+    salary:{required:true, validators:[number()]},
+    deductions:{required:true, validators:[number()]},
+    netSalary:{required:true, validators:[number()]},
+    active:{required:true, validators:[]},
+    accountStatus:{required:true, validators:[]},
+
+}
