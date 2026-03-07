@@ -13,7 +13,7 @@ import { validateEmployee } from "../../validations/employeeValidators";
 import axiosInstance from "../../util/axiosInstance";
 import { toast } from "react-toastify";
 
-const Employee = () => {
+const Employee = ({ employeeData, editMode }) => {
   const [employeeType, setEmployeeType] = useState([]);
   const [state, setState] = useState([]);
   const [gender, setGender] = useState([]);
@@ -24,6 +24,7 @@ const Employee = () => {
   const [accountStatus, setAccountStatus] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [employeeList, setEmployeeList] = useState({});
   const [employee, setEmployee] = useState({
     employeeType: "",
     firstName: "",
@@ -78,6 +79,33 @@ const Employee = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      const response = await axiosInstance.get(
+        `/employee/${employeeData.manager}`,
+      );
+      setEmployeeList(response.data);
+    })();
+  }, [employeeData]);
+
+  useEffect(() => {
+    if (employeeData && editMode) {
+      setEmployee((prev) => ({
+        ...prev,
+        ...employeeData,
+        manager: employeeData.manager
+          ? {
+              id: employeeData.manager,
+              text1: employeeList?.fullName,
+            }
+          : null,
+      }));
+    }
+  }, [employeeData, editMode, employeeList]);
+
+  console.log("employee", employeeData);
+  console.log("editMode", editMode);
+
   const handleChange = (name, value) => {
     setEmployee({
       ...employee,
@@ -128,28 +156,44 @@ const Employee = () => {
 
   const handleSubmit = async () => {
     const result = validateForm(employee, validateEmployee);
-    console.log("Validation result:", result);
-  console.log("Employee state:", employee);
+
     setErrors(result);
     if (Object.keys(result).length === 0) {
-      
       setLoading(true);
 
       try {
-        const employeeRequest = {
-          ...employee,
-          manager: employee.manager?.id|| null,
-          createdBy: "admin",
-          updatedBy: "",
-        };
-        console.log("Employee Request", employeeRequest);
-        const response = await axiosInstance.post(
-          "/employee/add",
-          employeeRequest,
-        );
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        toast.success("Employee added successfully");
-        handleReset();
+        if (editMode) {
+          const employeeRequest = {
+            ...employee,
+            manager: employee.manager?.id,
+            updatedBy: "admin",
+          };
+          
+          const response = await axiosInstance.put(
+            `/employee/update/${employeeData.id}`,
+            employeeRequest,
+          );
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          toast.success("Employee updated successfully");
+
+          handleReset();
+          return;
+        } else {
+          const employeeRequest = {
+            ...employee,
+            manager: employee.manager?.id || null,
+            createdBy: "admin",
+            updatedBy: "",
+          };
+          console.log("Employee Request", employeeRequest);
+          const response = await axiosInstance.post(
+            "/employee/add",
+            employeeRequest,
+          );
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          toast.success("Employee added successfully");
+          handleReset();
+        }
       } catch (error) {
         console.error("Error adding employee", error);
         toast.error("Failed to add employee");
