@@ -302,7 +302,7 @@ const EmployeeLeave = () => {
                   onClick: (row) => {
                     handleEditLeave(row);
                   },
-                  disabled: (row) => row.leaveStatus === 1 || row.active === 2,
+                  disabled: (row) => row.leaveStatus === 1 || row.active === 2 || row.leaveStatus ===3,
                 },
               ]}
               data={leaves}
@@ -313,7 +313,7 @@ const EmployeeLeave = () => {
                   label: "Cancel",
                   color: "error",
                   onClick: (row) => handelCancelLeave(row),
-                  disabled: (row) => row.leaveStatus === 1 || row.active === 2,
+                  disabled: (row) => row.leaveStatus === 1 || row.active === 2 || row.leaveStatus ===3,
                 },
               ]}
             />

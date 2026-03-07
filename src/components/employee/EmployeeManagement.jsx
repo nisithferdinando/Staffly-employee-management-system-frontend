@@ -6,6 +6,9 @@ import { getKeyValue } from "../keyvalue/keyValueData";
 import Button from "../button/Button";
 import Table from "../Table/Table";
 import Loader from "../../loader/Loader";
+import Modal from "../modal/Modal";
+import Employee from "./Employee";
+import axios from "axios";
 
 const EmployeeManagement = () => {
   const [form, setForm] = useState({
@@ -23,6 +26,10 @@ const EmployeeManagement = () => {
   const [employeeType, setEmployeeType] = useState([]);
   const [active, setActive] = useState([]);
   const [results, setResults] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [employeeData, setEmployeeData] = useState({});
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -48,13 +55,23 @@ const EmployeeManagement = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.post("/employee/search", form);
-      await new Promise((resolve)=> setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 700));
       setResults(response.data);
     } catch (error) {
       console.error("Error searching employees:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRowDoubleClick = async (row) => {
+    setOpenModal(true);
+    setSelectedRow(row);
+    console.log("id", row.id);
+    const response = await axiosInstance.get(`/employee/${row.id}`);
+    setEditMode(true);
+    setEmployeeData(response.data);
+    console.log("employeeData", response.data);
   };
 
   return (
@@ -135,11 +152,20 @@ const EmployeeManagement = () => {
                 ]}
                 data={results}
                 sizeVariant="sm"
+                onRowDoubleClick={handleRowDoubleClick}
               />
             </div>
           </div>
         </div>
       )}
+      <Modal
+        title="Update Employee"
+        show={openModal}
+        onClose={() => setOpenModal(false)}
+        size="xl"
+      >
+        <Employee employeeData={employeeData} editMode={editMode} />
+      </Modal>
     </div>
   );
 };

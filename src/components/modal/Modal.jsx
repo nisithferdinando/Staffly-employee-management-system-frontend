@@ -14,18 +14,19 @@ const Modal = ({
   onSave = null,
   content = null,
   children,
-  size = "md",           
+  size = "md",
   closeText = "Cancel",
   saveText = "Save",
   showFooter = true,
   disableBackdropClick = true,
   disableEscapeKeyDown = true,
+  position= "center",
 }) => {
- 
   const maxWidthMap = {
     sm: "sm",
     md: "md",
     lg: "lg",
+    xl: "xl",
   };
 
   return (
@@ -36,11 +37,20 @@ const Modal = ({
       fullWidth
       disableEscapeKeyDown={disableEscapeKeyDown}
       onBackdropClick={disableBackdropClick ? () => {} : onClose}
+      position={position}
     >
       {title && <DialogTitle>{title}</DialogTitle>}
 
       <DialogContent dividers>
-        {content ? (typeof content === "string" ? <p>{content}</p> : content) : children}
+        {content ? (
+          typeof content === "string" ? (
+            <p>{content}</p>
+          ) : (
+            content
+          )
+        ) : (
+          children
+        )}
       </DialogContent>
 
       {showFooter && (
