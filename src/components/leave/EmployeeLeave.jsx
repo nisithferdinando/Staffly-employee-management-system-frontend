@@ -37,6 +37,7 @@ const EmployeeLeave = () => {
   const [selectedLeave, setSelectedLeave] = useState(null);
 
   const employee = useEmployee();
+  console.log("employee", employee);
 
   useEffect(() => {
     (async () => {
@@ -63,7 +64,6 @@ const EmployeeLeave = () => {
 
   const handleLeaveType = (type) => {
     const today = new Date();
-    
 
     if (type === 1) {
       const tomorrow = new Date();
@@ -97,13 +97,13 @@ const EmployeeLeave = () => {
 
       try {
         const leaveRequest = {
-          employee: employee.id,
+          employee: employee.employeeId,
           employeeNo: employee.employeeNo,
           firstName: employee.firstName,
           lastName: employee.lastName,
           leaveType: form.leaveType,
           leaveDate: form.leaveDate,
-          createdBy: employee.fullName,
+          createdBy: employee.username,
           coveringPerson: form.coveringPerson.id,
           remarks: form.remarks,
           updatedBy: "",
@@ -132,10 +132,10 @@ const EmployeeLeave = () => {
     }
   };
 
-  const employeeId = employee?.id;
+  const employeeId = employee?.employeeId;
 
   useEffect(() => {
-    if (!employee?.id) return;
+    if (!employee?.employeeId) return;
     (async () => {
       const response = await axiosInstance.get(`/leave/summary/${employeeId}`);
       setLeaveSummary(response.data);
@@ -145,7 +145,7 @@ const EmployeeLeave = () => {
   console.log("leave summary", leaveSummary);
 
   useEffect(() => {
-    if (!employee?.id) return;
+    if (!employee?.employeeId) return;
     (async () => {
       const response = await axiosInstance.get(`/leave/all/${employeeId}`);
       setLeaves(response.data);
@@ -215,7 +215,7 @@ const EmployeeLeave = () => {
                     api={getSearchDropdown}
                     apiDependency={{
                       type: "employee",
-                      value: employee?.id,
+                      value: employee?.employeeId,
                       param1: employee?.department,
                     }}
                     onChange={handleChange}
@@ -302,7 +302,10 @@ const EmployeeLeave = () => {
                   onClick: (row) => {
                     handleEditLeave(row);
                   },
-                  disabled: (row) => row.leaveStatus === 1 || row.active === 2 || row.leaveStatus ===3,
+                  disabled: (row) =>
+                    row.leaveStatus === 1 ||
+                    row.active === 2 ||
+                    row.leaveStatus === 3,
                 },
               ]}
               data={leaves}
@@ -313,7 +316,10 @@ const EmployeeLeave = () => {
                   label: "Cancel",
                   color: "error",
                   onClick: (row) => handelCancelLeave(row),
-                  disabled: (row) => row.leaveStatus === 1 || row.active === 2 || row.leaveStatus ===3,
+                  disabled: (row) =>
+                    row.leaveStatus === 1 ||
+                    row.active === 2 ||
+                    row.leaveStatus === 3,
                 },
               ]}
             />

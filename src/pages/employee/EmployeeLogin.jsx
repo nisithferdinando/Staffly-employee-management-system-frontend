@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
 import axiosInstance from "../../util/axiosInstance";
+import { useDispatch } from "react-redux";
+import getEmployee from "../../action/getEmployee";
 
 const EmployeeLogin = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -12,6 +14,7 @@ const EmployeeLogin = () => {
   const [loading, setLoading] = useState(false);
   const [formToogle, setFormTogle] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (name, value) => {
     setFormData({
@@ -44,19 +47,22 @@ const EmployeeLogin = () => {
       localStorage.setItem("AdminToken", response.data.token);
       localStorage.setItem(
         "EmployeeEmail",
-        response.data.employeeLoginDetails.email
+        response.data.employeeLoginDetails.email,
       );
+      const userId = response.data.employeeLoginDetails.id;
+      localStorage.setItem("userId", response.data.employeeLoginDetails.id);
       localStorage.setItem(
-        "userId",
-        response.data.employeeLoginDetails.employee
+        "employeeId",
+        response.data.employeeLoginDetails.employee,
       );
+      dispatch(getEmployee(userId));
       localStorage.setItem("role", response.data.role);
       setValidationErrors("");
       navigate("/employee/dashboard");
     } catch (error) {
       setValidationErrors(
         error.response?.data?.message ||
-          "An unexpected error occurred. Please try again."
+          "An unexpected error occurred. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -124,18 +130,18 @@ const EmployeeLogin = () => {
               <span>Remember me</span>
             </label>
           </div>
-             <div className="flex gap-3">
-          <Button
-            type="submit"
-            label={loading ? "Logging in..." : "Login"}
-            disabled={loading}
-          />
-          <Button
-            type="button"
-            label="Login as Admin"
-            disabled={loading}
-            onClick={() => navigate("/admin/login")}
-          />
+          <div className="flex gap-3">
+            <Button
+              type="submit"
+              label={loading ? "Logging in..." : "Login"}
+              disabled={loading}
+            />
+            <Button
+              type="button"
+              label="Login as Admin"
+              disabled={loading}
+              onClick={() => navigate("/admin/login")}
+            />
           </div>
         </form>
       </div>

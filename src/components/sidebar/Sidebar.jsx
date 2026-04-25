@@ -8,11 +8,13 @@ import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box } from "@mui/material";
 import { sidebarData } from "./SidebarData";
+import { useSelector } from "react-redux";
 
 const AppSidebar = ({ visible, onHide }) => {
-  const role = localStorage.getItem("role");
-  const menu = sidebarData[role] || [];
-
+  const employee = useSelector((state) => state.employee.employee);
+  const userPermissions = employee?.permissions || {};
+  console.log("User Permissions:", userPermissions);
+  console.log("Employee:", employee);
   return (
     <Drawer
       variant="persistent"
@@ -29,33 +31,39 @@ const AppSidebar = ({ visible, onHide }) => {
       }}
     >
       <List>
-        {menu.map((item) => {
-          const Icon = item.icon;
-          return (
-            <div>
-              <Box
-                key={item.path}
-                component={Link}
-                to={item.path}
-                onClick={onHide}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "8px 16px",
-                  textDecoration: "none",
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: "gainsboro",
-                  },
-                  borderRadius: 1,
-                }}
-              >
-                <Icon sx={{ marginRight: 1 }} />
-                <Box component="span">{item.label}</Box>
-              </Box>
-            </div>
-          );
-        })}
+        {sidebarData
+          .filter((item) => {
+            if (!item.component || !item.permission) return false;
+            return (
+              userPermissions?.[item.component]?.[item.permission] ?? false
+            );
+          })
+          .map((item) => {
+            const Icon = item.icon;
+            return (
+              <div key={item.path}>
+                <Box
+                  component={Link}
+                  to={item.path}
+                  onClick={onHide}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "8px 16px",
+                    textDecoration: "none",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "gainsboro",
+                    },
+                    borderRadius: 1,
+                  }}
+                >
+                  <Icon sx={{ marginRight: 1 }} />
+                  <Box component="span">{item.label}</Box>
+                </Box>
+              </div>
+            );
+          })}
       </List>
     </Drawer>
   );

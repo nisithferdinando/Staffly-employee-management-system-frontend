@@ -26,12 +26,12 @@ const Employee = ({ employeeData, editMode }) => {
   const [errors, setErrors] = useState({});
   const [employeeList, setEmployeeList] = useState({});
   const [employee, setEmployee] = useState({
-    employeeType: "",
+    employeeType: "1",
     firstName: "",
     lastName: "",
     fullName: "",
     dateOfBirth: "",
-    gender: "",
+    gender: "1",
     nationalId: "",
     phone: "",
     alternativePhone: "",
@@ -40,10 +40,10 @@ const Employee = ({ employeeData, editMode }) => {
     addressNo: "",
     address: "",
     city: "",
-    branch: "",
-    department: "",
+    branch: "1",
+    department: "1",
     manager: "",
-    designation: "",
+    designation: "1",
     joiningDate: "",
     comfirmationDate: "",
     terminationDate: "",
@@ -52,7 +52,7 @@ const Employee = ({ employeeData, editMode }) => {
     deduction: "",
     netSalary: "",
     active: "1",
-    state: "",
+    state: "1",
     accountStatus: "1",
     createdBy: "",
     updatedBy: "",
@@ -80,31 +80,32 @@ const Employee = ({ employeeData, editMode }) => {
   }, []);
 
   useEffect(() => {
+    if (!employeeData?.manager) return;
     (async () => {
-      const response = await axiosInstance.get(
-        `/employee/${employeeData.manager}`,
-      );
-      setEmployeeList(response.data);
+      try {
+        const response = await axiosInstance.get(
+          `/employee/${employeeData.manager}`,
+        );
+        setEmployeeList(response.data);
+      } catch (error) {
+        console.error("Error fetching manager", error);
+      }
     })();
   }, [employeeData]);
-
   useEffect(() => {
-    if (employeeData && editMode) {
-      setEmployee((prev) => ({
-        ...prev,
-        ...employeeData,
-        manager: employeeData.manager
-          ? {
-              id: employeeData.manager,
-              text1: employeeList?.fullName,
-            }
-          : null,
-      }));
-    }
-  }, [employeeData, editMode, employeeList]);
+    if (!employeeData || !editMode) return;
 
-  console.log("employee", employeeData);
-  console.log("editMode", editMode);
+    setEmployee((prev) => ({
+      ...prev,
+      ...employeeData,
+      manager: employeeData.manager
+        ? {
+            id: employeeData.manager,
+            text1: employeeList?.fullName,
+          }
+        : null,
+    }));
+  }, [employeeData, editMode, employeeList]);
 
   const handleChange = (name, value) => {
     setEmployee({
@@ -168,7 +169,7 @@ const Employee = ({ employeeData, editMode }) => {
             manager: employee.manager?.id,
             updatedBy: "admin",
           };
-          
+
           const response = await axiosInstance.put(
             `/employee/update/${employeeData.id}`,
             employeeRequest,

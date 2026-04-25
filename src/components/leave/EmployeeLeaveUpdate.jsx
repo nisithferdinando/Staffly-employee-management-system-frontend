@@ -24,16 +24,18 @@ const EmployeeLeaveUpdate = ({
 
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
-  const [employeeList, setEmployeeList] = useState({});
+  const [employeeList, setEmployeeList] = useState(null);
 
   useEffect(() => {
     (async () => {
       const response = await axiosInstance.get(
-        `/employee/${leave.coveringPerson}`,
+        `/employee/${leave?.coveringPerson}`,
       );
       setEmployeeList(response.data);
     })();
   }, [leave]);
+
+  console.log("employeeList", employeeList);
 
   useEffect(() => {
     if (!leave) return;
@@ -78,7 +80,7 @@ const EmployeeLeaveUpdate = ({
           leaveDate: leave.leaveDate,
           active: leave.active,
           createdBy: leave.createdBy,
-          updatedBy: employee.fullName,
+          updatedBy: employee.username,
           coveringPerson: form.coveringPerson.id,
           remarks: form.remarks,
         };

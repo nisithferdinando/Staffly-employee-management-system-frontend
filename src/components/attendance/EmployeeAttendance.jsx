@@ -26,6 +26,7 @@ const EmployeeAttendance = () => {
   const [gridData, setGridData] = useState([]);
 
   const employee = useEmployee();
+  console.log("employee", employee);
 
   useEffect(() => {
     (async () => {
@@ -62,11 +63,11 @@ const EmployeeAttendance = () => {
   };
 
   const loadDaily = async () => {
-    if (!employee?.id) return;
+    if (!employee?.employeeId) return;
 
     setGridLoading(true);
     try {
-      const res = await axiosInstance.get(`/attendance/${employee.id}`);
+      const res = await axiosInstance.get(`/attendance/${employee.employeeId}`);
       const list = res?.data || [];
 
       const map = new Map();
@@ -77,8 +78,8 @@ const EmployeeAttendance = () => {
 
         if (!map.has(date)) {
           map.set(date, {
-            id: `${employee.id}_${date}`,
-            employeeId: r.employeeId ?? employee.id,
+            id: `${employee.employeeId}_${date}`,
+            employeeId: r.employeeId ?? employee.employeeId,
             employeeNo: r.employeeNo,
             firstName: r.firstName,
             lastName: r.lastName,
@@ -123,7 +124,7 @@ const EmployeeAttendance = () => {
 
   useEffect(() => {
     loadDaily();
-  }, [employee?.id]);
+  }, [employee?.employeeId]);
 
   const handleSubmit = async () => {
     const result = validateForm(form, validateEmployeeAttendance);
@@ -134,7 +135,7 @@ const EmployeeAttendance = () => {
       try {
         const attendanceRequest = {
           ...form,
-          employeeId: employee.id,
+          employeeId: employee.employeeId,
           firstName: employee.firstName,
           lastName: employee.lastName,
           attendanceConfirmed: 2,
@@ -186,8 +187,8 @@ const EmployeeAttendance = () => {
     setGridLoading(true);
     try {
       if (row.inTime !== null && row.inTime !== "") {
-        await axiosInstance.put(`/attendance/update/${employee.id}`, {
-          employeeId: employee.id,
+        await axiosInstance.put(`/attendance/update/${employee.employeeId}`, {
+          employeeId: employee.employeeId,
           employeeNo: employee.employeeNo,
           firstName: employee.firstName,
           lastName: employee.lastName,
@@ -204,8 +205,8 @@ const EmployeeAttendance = () => {
       }
 
       if (row.outTime !== null && row.outTime !== "") {
-        await axiosInstance.put(`/attendance/update/${employee?.id}`, {
-          employeeId: employee.id,
+        await axiosInstance.put(`/attendance/update/${employee?.employeeId}`, {
+          employeeId: employee.employeeId,
           employeeNo: employee.employeeNo,
           firstName: employee.firstName,
           lastName: employee.lastName,
