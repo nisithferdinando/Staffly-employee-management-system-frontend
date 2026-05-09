@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Input from "../input/Input";
 import Dropdown from "../input/Dropdown";
 import axiosInstance from "../../util/axiosInstance";
-import { getKeyValue } from "../keyvalue/keyValueData";
+import { getKeyValue, getLeaveTypes } from "../keyvalue/keyValueData";
 import DateTimePicker from "../input/DateTimePicker";
 import Button from "../button/Button";
 import Table from "../../components/Table/Table";
@@ -41,7 +41,7 @@ const EmployeeLeave = () => {
 
   useEffect(() => {
     (async () => {
-      const getLeaveType = await getKeyValue("leave");
+      const getLeaveType = await getLeaveTypes(employee?.employeeId);
       setLeaveType(getLeaveType);
     })();
   }, []);

@@ -10,3 +10,14 @@ export const getKeyValue = async (keyValue) => {
   }
 };
 
+export const getLeaveTypes = async(employee)=>{
+  try{
+    const response = await axiosInstance.get(`/leave/leave-type/${employee}`);
+    return response.data;
+  }
+  catch(error){
+    console.error("error", error);
+    return [];
+  }
+}
+
